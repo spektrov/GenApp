@@ -1,0 +1,11 @@
+namespace @Model.Namespace
+{
+    public class @Model.EntityName
+    {
+        @foreach (var property in Model.Properties)
+        {
+       @: public @property.Type @property.Name { get; set; }
+       @:
+        }
+    }
+}
