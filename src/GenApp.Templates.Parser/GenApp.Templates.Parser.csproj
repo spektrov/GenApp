@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="RazorEngineCore" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenApp.Templates.Abstractions\GenApp.Templates.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

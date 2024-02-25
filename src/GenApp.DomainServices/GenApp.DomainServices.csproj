@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Build.Locator" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+		<PackageReference Include="FluentResults" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenApp.Domain\GenApp.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
