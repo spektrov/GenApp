@@ -1,0 +1,39 @@
+<Project>
+  <ItemGroup>
+    <!-- Tests -->
+    <PackageVersion Include="xunit" Version="2.5.1" />
+    <PackageVersion Include="NSubstitute" Version="5.1.0" />
+    <PackageVersion Include="AutoFixture" Version="4.18.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.1" />
+    <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
+    <!-- Others -->
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Build.Locator" Version="1.6.10" />
+    <PackageVersion Include="RazorEngineCore" Version="2023.11.2" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageVersion Include="FluentValidation" Version="11.7.0" />
+    <PackageVersion Include="System.Net.Http.Json" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.22" />
+    <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+	<PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
+	<PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
+	<PackageVersion Include="FluentResults" Version="3.15.2" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.51.0.59060">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageVersion>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<LangVersion>preview</LangVersion>
+	<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	<Nullable>disable</Nullable>
+	<TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="StyleCop.Analyzers">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="SonarAnalyzer.CSharp">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+</Project>
