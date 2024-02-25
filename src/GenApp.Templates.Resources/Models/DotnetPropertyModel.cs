@@ -1,4 +1,4 @@
-﻿namespace GenApp.Templates.Resources.TemplateModels;
+﻿namespace GenApp.Templates.Resources.Models;
 public class DotnetPropertyModel
 {
     public string Name { get; set; }

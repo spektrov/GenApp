@@ -1,6 +1,6 @@
 ﻿using GenApp.Templates.Abstractions;
 
-namespace GenApp.Templates.Resources.TemplateModels;
+namespace GenApp.Templates.Resources.Models;
 public class DomainEntityModel : BaseTemplateModel
 {
     public override string TemplateName => TemplateNames.DomainEntity;

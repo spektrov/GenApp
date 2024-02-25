@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GenApp.Domain\GenApp.Domain.csproj" />
+    <ProjectReference Include="..\GenApp.Templates.Resources\GenApp.Templates.Resources.csproj" />
   </ItemGroup>
 
 </Project>
