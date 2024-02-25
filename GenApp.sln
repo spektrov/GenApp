@@ -20,7 +20,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Templates.Resources"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Templates.Parser", "src\GenApp.Templates.Parser\GenApp.Templates.Parser.csproj", "{18FB159A-9692-4715-93CB-1FABFEB89033}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenApp.Templates.Abstractions", "src\GenApp.Templates.Abstractions\GenApp.Templates.Abstractions.csproj", "{63012E42-C8EC-44F2-9203-1E42ECB54E6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Templates.Abstractions", "src\GenApp.Templates.Abstractions\GenApp.Templates.Abstractions.csproj", "{63012E42-C8EC-44F2-9203-1E42ECB54E6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{496084BB-0EC4-4B83-9819-332C35BC7345}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,12 +59,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{32D0BF23-63F8-4CC9-AAEC-4B89CEDA1190} = {033AA5FE-06A4-47D2-8030-9E15B94E71D7}
-		{18FB159A-9692-4715-93CB-1FABFEB89033} = {033AA5FE-06A4-47D2-8030-9E15B94E71D7}
-		{63012E42-C8EC-44F2-9203-1E42ECB54E6F} = {033AA5FE-06A4-47D2-8030-9E15B94E71D7}
+		{32D0BF23-63F8-4CC9-AAEC-4B89CEDA1190} = {496084BB-0EC4-4B83-9819-332C35BC7345}
+		{18FB159A-9692-4715-93CB-1FABFEB89033} = {496084BB-0EC4-4B83-9819-332C35BC7345}
+		{63012E42-C8EC-44F2-9203-1E42ECB54E6F} = {496084BB-0EC4-4B83-9819-332C35BC7345}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FD9D745-6FB8-4540-A378-861CD604080E}
 	EndGlobalSection
 EndGlobal
-

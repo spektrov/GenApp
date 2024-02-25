@@ -2,4 +2,7 @@
 	<ItemGroup>
 		<PackageReference Include="FluentResults" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\GenApp.Templates.Abstractions\GenApp.Templates.Abstractions.csproj" />
+	</ItemGroup>
 </Project>
