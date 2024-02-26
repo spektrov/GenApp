@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GenApp.DomainServices\GenApp.DomainServices.csproj" />
+    <ProjectReference Include="..\GenApp.Templates.Parser\GenApp.Templates.Parser.csproj" />
   </ItemGroup>
 
 </Project>
