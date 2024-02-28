@@ -18,7 +18,7 @@ public class TemplateParser : ITemplateParser
         var templateContent = await File.ReadAllTextAsync(templatePath, token);
 
         var razorEngine = new RazorEngine();
-        var template = await razorEngine.CompileAsync(templateContent);
+        var template = await razorEngine.CompileAsync(templateContent, cancellationToken: token);
         var parsedContent = await template.RunAsync(model);
 
         return parsedContent;
@@ -26,7 +26,7 @@ public class TemplateParser : ITemplateParser
 
     private static string GetTemplatePath(string templateName)
     {
-        var templatesDirectory = @"..\GenApi.Templates\Templates";
+        var templatesDirectory = @"..\GenApp.Templates.Resourses\Templates";
         var templateFile = $"{templateName}.cshtml";
 
         return Path.Combine(templatesDirectory, templateFile);

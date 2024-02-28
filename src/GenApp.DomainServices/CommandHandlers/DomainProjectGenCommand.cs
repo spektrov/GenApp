@@ -8,7 +8,7 @@ namespace GenApp.DomainServices.CommandHandlers;
 
 internal class DomainProjectGenCommand(IFileGenService fileGenService) : IGenCommand
 {
-    public Task ExecuteAsync(ZipArchive archive, ExtendedGenSettingsModel model, CancellationToken token)
+    public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
         var fileName = $"{model.AppName}.Domain.csproj";
 

@@ -1,6 +1,5 @@
-﻿using GenApp.Domain.Constants;
+﻿namespace GenApp.Domain.Constants;
 
-namespace GenApp.DomainServices.Mappers;
 public static class DotnetMsSqlServerTypes
 {
     public static Dictionary<string, IEnumerable<string>> Value => new()

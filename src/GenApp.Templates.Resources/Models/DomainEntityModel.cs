@@ -9,5 +9,7 @@ public class DomainEntityModel : BaseTemplateModel
 
     public string EntityName { get; set; }
 
+    public string KeyType { get; set; }
+
     public IEnumerable<DotnetPropertyModel> Properties { get; set; }
 }

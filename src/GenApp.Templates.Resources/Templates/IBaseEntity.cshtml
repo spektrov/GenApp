@@ -1,0 +1,9 @@
+﻿namespace @Model.Namespace
+{
+    public interface IAuditableEntity<TKey>
+    {
+        TKey Id { get; }
+
+        DateTime LastModifiedTime { get; }
+    }
+}

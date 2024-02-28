@@ -7,7 +7,7 @@ using GenApp.Templates.Resources.Models;
 namespace GenApp.DomainServices.CommandHandlers;
 internal class DirectoryBuildGenCommand(IFileGenService fileGenService) : IGenCommand
 {
-    public Task ExecuteAsync(ZipArchive archive, ExtendedGenSettingsModel model, CancellationToken token)
+    public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
         var fileName = "Directory.Build.props";
 

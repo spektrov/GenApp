@@ -6,12 +6,28 @@ using GenApp.Domain.Models;
 namespace GenApp.DomainServices.Services;
 internal class SqlTableParser : ISqlTableParser
 {
+    private static readonly string createTableSeparator = "create table";
     private static readonly string TablePropertyPattern = @"\,\d+|[\)\(;]|\b\d+\b|[\n]";
     private static readonly char ComaSeparator = ',';
     private static readonly char SpaceSeparator = ' ';
+    private static readonly string LineSeparator = "\n";
     private static readonly string NotNull = "not null";
     private static readonly string Unique = "unique";
     private static readonly string PrimaryKey = "primary key";
+
+    public Result<IEnumerable<SqlTableConfigurationModel>> BuildTablesConfiguration(string sqlCreateTables)
+    {
+        // Split script into individual statements
+        var singleLineSqlScript = sqlCreateTables.Replace(LineSeparator, string.Empty);
+        var statements = Regex.Split(singleLineSqlScript, createTableSeparator, RegexOptions.IgnoreCase)
+            .Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim());
+
+        var tableConfigResults = statements.Select(BuildTableConfiguration).ToList();
+
+        return tableConfigResults.Any(tc => tc.IsFailed)
+            ? tableConfigResults.First(tc => tc.IsFailed).ToResult()
+            : Result.Ok(tableConfigResults.Select(tc => tc.Value));
+    }
 
     public Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
     {

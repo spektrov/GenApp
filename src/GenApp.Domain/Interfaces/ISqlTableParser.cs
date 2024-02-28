@@ -5,5 +5,5 @@ namespace GenApp.Domain.Interfaces;
 
 public interface ISqlTableParser
 {
-    Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine);
+    Result<IEnumerable<SqlTableConfigurationModel>> BuildTablesConfiguration(string sqlCreateTables);
 }
