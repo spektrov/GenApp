@@ -26,7 +26,7 @@ public class TemplateParser : ITemplateParser
 
     private static string GetTemplatePath(string templateName)
     {
-        var templatesDirectory = @"..\GenApp.Templates.Resourses\Templates";
+        var templatesDirectory = @"..\GenApp.Templates.Resources\Templates";
         var templateFile = $"{templateName}.cshtml";
 
         return Path.Combine(templatesDirectory, templateFile);

@@ -10,9 +10,10 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
+        var usingList = new List<string> { $"{model.AppName}.Domain.Interfaces" };
         foreach (var entity in model.Entities)
         {
-            var fileName = $"Entities/{entity.EntityName}.cs";
+            var fileName = $"Entities/{entity.EntityName}Entity.cs";
             await fileGenService.CreateEntryAsync(
                 archive,
                 fileName.ToDomainProjectFile(model.AppName),
@@ -20,7 +21,9 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
                 {
                     Namespace = $"{model.AppName}.Domain.Entities",
                     EntityName = $"{entity.EntityName}Entity",
+                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
                     Properties = mapper.Map<IEnumerable<DotnetPropertyModel>>(entity.Properties),
+                    Usings = usingList,
                 },
                 token);
         }
