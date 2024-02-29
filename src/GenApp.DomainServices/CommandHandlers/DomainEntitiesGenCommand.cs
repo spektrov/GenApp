@@ -8,19 +8,24 @@ using GenApp.Templates.Resources.Models;
 namespace GenApp.DomainServices.CommandHandlers;
 internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper mapper) : IGenCommand
 {
-    public Task ExecuteAsync(ZipArchive archive, ExtendedGenSettingsModel model, CancellationToken token)
+    public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var fileName = $"Entities/{model.EntityConfiguration.EntityName}.cs";
-
-        return fileGenService.CreateEntryAsync(
-            archive,
-            fileName.ToDomainProjectFile(model.AppName),
-            new DomainEntityModel
-            {
-                Namespace = $"{model.AppName}.Domain.Entities",
-                EntityName = $"{model.EntityConfiguration.EntityName}Entity",
-                Properties = mapper.Map<IEnumerable<DotnetPropertyModel>>(model.EntityConfiguration.Properties),
-            },
-            token);
+        var usingList = new List<string> { $"{model.AppName}.Domain.Interfaces" };
+        foreach (var entity in model.Entities)
+        {
+            var fileName = $"Entities/{entity.EntityName}Entity.cs";
+            await fileGenService.CreateEntryAsync(
+                archive,
+                fileName.ToDomainProjectFile(model.AppName),
+                new DomainEntityModel
+                {
+                    Namespace = $"{model.AppName}.Domain.Entities",
+                    EntityName = $"{entity.EntityName}Entity",
+                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    Properties = mapper.Map<IEnumerable<DotnetPropertyModel>>(entity.Properties),
+                    Usings = usingList,
+                },
+                token);
+        }
     }
 }

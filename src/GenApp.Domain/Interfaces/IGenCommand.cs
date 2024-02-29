@@ -5,5 +5,5 @@ namespace GenApp.Domain.Interfaces;
 
 public interface IGenCommand
 {
-    Task ExecuteAsync(ZipArchive archive, ExtendedGenSettingsModel model, CancellationToken token);
+    Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token);
 }

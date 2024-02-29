@@ -1,0 +1,8 @@
+﻿namespace @Model.Namespace;
+
+public interface IBaseEntity<TKey>
+{
+    TKey Id { get; }
+
+    DateTime LastModifiedTime { get; }
+}

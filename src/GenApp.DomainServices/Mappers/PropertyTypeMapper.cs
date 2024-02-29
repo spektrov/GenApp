@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using GenApp.Domain.Constants;
 using GenApp.Domain.Enums;
 
 namespace GenApp.DomainServices.Mappers;

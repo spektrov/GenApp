@@ -1,26 +1,28 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 
 namespace GenApp.DomainServices.Services;
 
 public class SolutionGenService(
-    IMapper mapper,
+    IApplicationDataMapper applicationDataMapper,
     IArchiveGenService archiveGenService,
     IEnumerable<IGenCommand> commands)
     : ISolutionGenService
 {
     public async Task<Result<Stream>> GenerateApplicationAsync(GenSettingsModel settings, CancellationToken token)
     {
-        var model = mapper.Map<ExtendedGenSettingsModel>(settings);
-        model.EntityConfiguration = mapper.Map<DotnetEntityConfigurationModel>(model.TableConfiguration);
+        var model = applicationDataMapper.Map(settings);
+        if (model.IsFailed)
+        {
+            return model.ToResult();
+        }
 
         using (var archive = archiveGenService.CreateArchive())
         {
             foreach (var command in commands)
             {
-                await command.ExecuteAsync(archive, model, token);
+                await command.ExecuteAsync(archive, model.Value, token);
             }
         }
 

@@ -1,6 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <None Remove="Templates\IBaseEntity.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Templates\IBaseEntity.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GenApp.Templates.Abstractions\GenApp.Templates.Abstractions.csproj" />
   </ItemGroup>
 

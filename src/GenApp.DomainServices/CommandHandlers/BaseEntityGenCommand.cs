@@ -2,20 +2,21 @@
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
-using GenApp.Templates.Resources.StaticTemplates;
+using GenApp.Templates.Resources.Models;
 
 namespace GenApp.DomainServices.CommandHandlers;
-
-public class EditorconfigGenCommand(IFileGenService fileGenService) : IGenCommand
+internal class BaseEntityGenCommand(IFileGenService fileGenService) : IGenCommand
 {
     public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var fileName = ".editorconfig";
-
+        var fileName = $"Interfaces/IBaseEntity.cs";
         return fileGenService.CreateEntryAsync(
             archive,
-            fileName.ToCoreSolutionFile(),
-            EditorconfigContent.Value,
+            fileName.ToDomainProjectFile(model.AppName),
+            new BaseEntityModel
+            {
+                Namespace = $"{model.AppName}.Domain.Interfaces",
+            },
             token);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using System.Net.Mime;
-using System.Net;
 using GenApp.WebApi.Models;
 
 namespace GenApp.WebApi.Middlewares;
@@ -13,7 +12,7 @@ public static class ExceptionMiddlewareExtension
         {
             appError.Run(async context =>
             {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
 
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();

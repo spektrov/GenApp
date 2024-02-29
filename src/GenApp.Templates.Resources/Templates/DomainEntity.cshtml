@@ -1,11 +1,16 @@
-namespace @Model.Namespace
+@foreach (var usg in Model.Usings)
 {
-    public class @Model.EntityName
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+
+public class @Model.EntityName : IBaseEntity<@Model.KeyType>
+{
+    @foreach (var property in Model.Properties)
     {
-        @foreach (var property in Model.Properties)
-        {
-       @: public @property.Type @property.Name { get; set; }
-       @:
-        }
+    @:public @property.Type @property.Name { get; set; }
+    @:
     }
+    public DateTime LastModifiedTime { get; set; }
 }

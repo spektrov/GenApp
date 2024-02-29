@@ -1,4 +1,5 @@
 ﻿using GenApp.Domain.Interfaces;
+using GenApp.DomainServices.Mappers;
 using GenApp.DomainServices.Services;
 using Microsoft.Build.Locator;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ public static class Bootstrap
         services.AddScoped<IFileGenService, FileGenService>();
         services.AddScoped<IArchiveGenService, ArchiveGenService>();
         services.AddScoped<ISqlTableParser, SqlTableParser>();
+        services.AddScoped<IApplicationDataMapper, ApplicationDataModelMapper>();
 
         return services;
     }
