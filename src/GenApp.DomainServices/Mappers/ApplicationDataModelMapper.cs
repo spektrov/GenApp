@@ -1,9 +1,9 @@
 ﻿using FluentResults;
 using GenApp.Domain.Constants;
 using GenApp.Domain.Enums;
-using GenApp.Domain.Extensions;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
+using GenApp.DomainServices.Extensions;
 
 namespace GenApp.DomainServices.Mappers;
 public class ApplicationDataModelMapper(ISqlTableParser sqlTableParser) : IApplicationDataMapper
