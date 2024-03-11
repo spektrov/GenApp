@@ -1,0 +1,26 @@
+<Project Sdk="@Model.Type">
+	<PropertyGroup>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<TargetFramework>@Model.SdkVersion</TargetFramework>
+	</PropertyGroup>
+
+	@if (Model.Packages != null && Model.Packages.Count > 0)
+	{
+	<ItemGroup>
+		@foreach (var package in Model.Packages)
+		{
+			@:<PackageReference Include="@package.Name" Version="@package.Version" />  
+		}
+	</ItemGroup>
+	}
+	@if (Model.Includes != null && Model.Includes.Count > 0)
+	{
+	<ItemGroup>
+		@foreach (var include in Model.Includes)
+		{
+			@:<ProjectReference Include="@include" />
+		}
+	</ItemGroup>
+	}
+</Project>

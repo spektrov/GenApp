@@ -7,23 +7,18 @@ public static class FileNameExtensions
         return $"{filename}";
     }
 
-    public static string ToDomainProjectFile(this string filename, string appName)
+    public static string ToDalProjectFile(this string filename, string appName)
     {
-        return $"src/{appName}.Domain/{filename}";
+        return $"src/{appName}.DAL/{filename}";
     }
 
     public static string ToApiProjectFile(this string filename, string appName)
     {
-        return $"src/{appName}.Api/{filename}";
+        return $"src/{appName}.API/{filename}";
     }
 
-    public static string ToBLLProjectFile(this string filename, string appName)
+    public static string ToBllProjectFile(this string filename, string appName)
     {
-        return $"src/{appName}.BusinessLogic/{filename}";
-    }
-
-    public static string ToDALProjectFile(this string filename, string appName)
-    {
-        return $"src/{appName}.DataAccess/{filename}";
+        return $"src/{appName}.BLL/{filename}";
     }
 }

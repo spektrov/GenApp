@@ -610,3 +610,4 @@ dotnet_diagnostic.SA1000.severity = silent
 dotnet_diagnostic.SA1401.severity = suggestion
 csharp_style_prefer_primary_constructors = true:suggestion
 csharp_style_prefer_readonly_struct_member = true:suggestion
+dotnet_diagnostic.SA1027.severity = none

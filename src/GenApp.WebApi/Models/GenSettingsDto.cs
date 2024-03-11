@@ -13,4 +13,6 @@ public class GenSettingsDto
     required public string AppName { get; set; }
 
     public int DotnetSdkVersion { get; set; }
+
+    public bool UseDocker { get; set; }
 }

@@ -1,5 +1,5 @@
-﻿namespace GenApp.Templates.Resources.Models;
-public class DotnetPropertyModel
+﻿namespace GenApp.Templates.Resources.DTOs;
+public class DotnetPropertyDto
 {
     public string Name { get; set; }
 

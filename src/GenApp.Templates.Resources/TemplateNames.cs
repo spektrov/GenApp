@@ -2,9 +2,9 @@
 
 public static class TemplateNames
 {
-    public const string DirectoryBuild = "DirectoryBuild";
+    public const string DomainEntity = nameof(DomainEntity);
 
-    public const string DomainEntity = "DomainEntity";
+    public const string IBaseEntity = nameof(IBaseEntity);
 
-    public const string BaseEntity = "IBaseEntity";
+    public const string CsprojFile = nameof(CsprojFile);
 }

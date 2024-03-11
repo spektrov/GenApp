@@ -12,7 +12,7 @@ internal class BaseEntityGenCommand(IFileGenService fileGenService) : IGenComman
         var fileName = $"Interfaces/IBaseEntity.cs";
         return fileGenService.CreateEntryAsync(
             archive,
-            fileName.ToDomainProjectFile(model.AppName),
+            fileName.ToDalProjectFile(model.AppName),
             new BaseEntityModel
             {
                 Namespace = $"{model.AppName}.Domain.Interfaces",
