@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
+		<PackageReference Include="Humanizer.Core" />
 		<PackageReference Include="Microsoft.Build.Locator" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
