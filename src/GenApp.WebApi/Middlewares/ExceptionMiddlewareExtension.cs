@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using System.Net.Mime;
-using GenApp.WebApi.Models;
 
 namespace GenApp.WebApi.Middlewares;
 
@@ -21,8 +20,7 @@ public static class ExceptionMiddlewareExtension
                     var logger = app.ApplicationServices.GetRequiredService<ILogger<Program>>();
                     logger.LogError("Something went wrong: {ContextFeatureError}", contextFeature.Error);
 
-                    await context.Response.WriteAsJsonAsync(
-                        new ErrorDetails(context.Response.StatusCode, "Internal Server Error."));
+                    await context.Response.WriteAsJsonAsync(new { context.Response.StatusCode, Message = "Internal Server Error." });
                 }
             });
         });
