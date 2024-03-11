@@ -3,7 +3,7 @@
 namespace GenApp.Templates.Resources.Models;
 public class BaseEntityModel : BaseTemplateModel, ICsharpClassModel
 {
-    public override string TemplateName => TemplateNames.BaseEntity;
+    public override string TemplateName => TemplateNames.IBaseEntity;
 
     public string Namespace { get; set; }
 
