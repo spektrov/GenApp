@@ -1,9 +1,9 @@
 ﻿using GenApp.Templates.Abstractions;
 
 namespace GenApp.Templates.Resources.Models;
-public class BaseEntityModel : BaseTemplateModel, ICsharpClassModel
+public class EnumSortingOrderModel : BaseTemplateModel, ICsharpClassModel
 {
-    public override string TemplateName => TemplateNames.IBaseEntity;
+    public override string TemplateName => TemplateNames.EnumSortingOrder;
 
     public string Namespace { get; set; }
 

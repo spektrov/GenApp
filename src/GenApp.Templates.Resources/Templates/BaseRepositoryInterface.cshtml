@@ -1,0 +1,76 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public interface IRepositoryBase<out TDbContext, TEntity, TId>
+    where TDbContext : DbContext
+    where TEntity : class, IBaseEntity<TId>
+{
+    TDbContext Context { get; }
+
+    Specification<TEntity, TId> BuildSpecification(FilterParameters parameters);
+
+    IEnumerable<Expression<Func<TEntity?, object>>> BuildSortingExpression(string sorting);
+
+    Task<TId> AddAsync(TEntity entity, CancellationToken cancellationToken);
+
+    Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+
+    Task DeleteAsync(Specification<TEntity, TId> specification, CancellationToken cancellationToken);
+
+    Task DeleteRangeAsync(Specification<TEntity, TId> specification, CancellationToken cancellationToken);
+
+    Task<int> CountAsync(Specification<TEntity, TId> specification, CancellationToken cancellationToken);
+
+    Task<TEntity?> FirstOrDefaultAsync(
+            Specification<TEntity, TId> specification,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null,
+            bool noTracking = true,
+            IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+            SortingOrder? sortingOrder = null);
+
+    Task<TProjection?> FirstOrDefaultAsync<TProjection>(
+            Specification<TEntity, TId> specification,
+            Expression<Func<TEntity?, TProjection>> projectExpression,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null,
+            bool noTracking = true,
+            IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+            SortingOrder? sortingOrder = null);
+
+    Task<TEntity[]> GetManyAsync(
+            Specification<TEntity, TId> specification,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null,
+            bool noTracking = true,
+            int skip = default,
+            int take = default,
+            IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+            SortingOrder? sortingOrder = null);
+
+    Task<TProjection[]> GetManyAsync<TProjection>(
+            Specification<TEntity, TId> specification,
+            Expression<Func<TEntity?, TProjection>> projectExpression,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null,
+            bool noTracking = true,
+            int skip = default,
+            int take = default,
+            IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+            SortingOrder? sortingOrder = null);
+
+    Task UpdateAsync(
+            Specification<TEntity, TId> specification,
+            Action<TEntity> updateAction,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null);
+
+    Task UpdateRangeAsync(
+            Specification<TEntity, TId> specification,
+            Action<IEnumerable<TEntity>> updateAction,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null);
+}

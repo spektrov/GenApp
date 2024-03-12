@@ -13,4 +13,10 @@ public class GenSettingsModel
     public string DotnetSdkVersion { get; set; }
 
     public bool UseDocker { get; set; }
+
+    public string DalProjectName { get; set; }
+
+    public string BllProjectName { get; set; }
+
+    public string ApiProjectName { get; set; }
 }

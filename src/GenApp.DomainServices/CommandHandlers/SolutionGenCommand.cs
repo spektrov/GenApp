@@ -10,11 +10,9 @@ internal class SolutionGenCommand(IFileGenService fileGenService) : IGenCommand
 {
     public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var fileName = $"{model.AppName}Solution.sln";
-
         return fileGenService.CreateEntryAsync(
            archive,
-           fileName.ToCoreSolutionFile(),
+           $"{model.AppName}Solution.sln".ToCoreSolutionFile(),
            SolutionFileContent.Value(model.AppName),
            token);
     }

@@ -10,11 +10,9 @@ public class EditorconfigGenCommand(IFileGenService fileGenService) : IGenComman
 {
     public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var fileName = ".editorconfig";
-
         return fileGenService.CreateEntryAsync(
             archive,
-            fileName.ToCoreSolutionFile(),
+            ".editorconfig".ToCoreSolutionFile(),
             EditorconfigContent.Value,
             token);
     }

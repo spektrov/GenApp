@@ -1,0 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
+namespace @Model.Namespace;
+public interface ICustomDbMigrator
+{
+    Task MigrateAsync<T> (T context, CancellationToken token = default)
+        where T : DbContext;
+}

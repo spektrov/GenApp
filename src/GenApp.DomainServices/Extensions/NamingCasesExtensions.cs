@@ -2,7 +2,7 @@
 
 namespace GenApp.DomainServices.Extensions;
 
-public static class StringExtensions
+public static class NamingCasesExtensions
 {
     /// <summary>
     /// Transforms string into camelCase.

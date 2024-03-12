@@ -1,0 +1,48 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+namespace @Model.Namespace;
+
+public class CustomDbMigrator : ICustomDbMigrator
+{
+    private readonly string migrationsFolderPath;
+    private readonly string migrationsHistoryFilePath;
+
+    public CustomDbMigrator(IConfiguration configuration)
+    {
+        migrationsFolderPath = configuration["CustomMigrator:MigrationFolder"];
+        migrationsHistoryFilePath = configuration["CustomMigrator:MigrationHistoryFile"];
+    }
+
+    public async Task MigrateAsync<T>(T context, CancellationToken token = default)
+        where T : DbContext
+    {
+        if (!File.Exists(migrationsHistoryFilePath))
+        {
+            return;
+        }
+
+        var appliedMigrations = (await File.ReadAllLinesAsync(migrationsHistoryFilePath, token))
+            .Select(line => line.Split(',')[0])
+            .ToList();
+        var files = Directory.GetFiles(migrationsFolderPath, "*.sql");
+        foreach (var file in files)
+        {
+            var fileName = Path.GetFileName(file);
+            if (appliedMigrations.Contains(fileName))
+            {
+                Console.WriteLine($"Migration {fileName} has already been applied. Skipping.");
+                continue;
+            }
+
+            Console.WriteLine($"Applying migration {fileName}.");
+
+            var scriptContent = await File.ReadAllTextAsync(file, token);
+            await context.Database.ExecuteSqlRawAsync(scriptContent, cancellationToken: token);
+
+            await File.AppendAllTextAsync(migrationsHistoryFilePath, $"{fileName},{DateTime.Now}\n", token);
+
+            Console.WriteLine($"Migration {fileName} applied successfully.");
+        }
+    }
+}
