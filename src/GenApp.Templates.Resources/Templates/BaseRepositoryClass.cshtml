@@ -1,0 +1,171 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public abstract class RepositoryBase<TDbContext, TEntity, TId> : IRepositoryBase<TDbContext, TEntity, TId>
+where TDbContext : DbContext
+where TEntity : class, IBaseEntity<TId>
+{
+    protected readonly JsonSerializerOptions JsonSerializerOptions = AppJsonSerializerOptions.Default;
+
+    public TDbContext Context { get; }
+
+    protected virtual IQueryable<TEntity> Set()
+    {
+        return Context.Set<TEntity>();
+    }
+
+    protected RepositoryBase(TDbContext context)
+    {
+        Context = context;
+    }
+
+    public virtual Specification<TEntity, TId> BuildSpecification(FilterParameters parameters)
+    {
+        return new TrueSpecification<TEntity, TId>();
+    }
+
+    public virtual IEnumerable<Expression<Func<TEntity?, object>>> BuildSortingExpression(string sorting)
+    {
+        yield return e => e!.Id;
+    }
+
+    public virtual async Task<TId> AddAsync(TEntity entity, CancellationToken cancellationToken)
+    {
+        var entry = Context.Add(entity);
+
+        await SaveChangesAsync(cancellationToken);
+
+        return entry.Entity.Id;
+    }
+
+    public virtual Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken)
+    {
+        Context.AddRange(entities);
+
+        return SaveChangesAsync(cancellationToken);
+    }
+
+    public Task<int> CountAsync(Specification<TEntity, TId> specification, CancellationToken cancellationToken)
+    {
+        var query = Set().GetFilteredQuery(specification, Array.Empty<string>(), true);
+        return query
+            .CountAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(Specification<TEntity, TId> specification, CancellationToken cancellationToken)
+    {
+        var entity = await Set().FirstOrDefaultAsync(specification.Expression, cancellationToken) ??
+            throw new InvalidOperationException(
+                $"Could not find entity {typeof(TEntity).Name} by specification {specification.GetType().Name}");
+
+        Context.Remove(entity);
+
+        await SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteRangeAsync(Specification<TEntity, TId> specification, CancellationToken cancellationToken)
+    {
+        object[] entities = await GetManyAsync(specification, cancellationToken, noTracking: false);
+
+        Context.RemoveRange(entities);
+
+        await SaveChangesAsync(cancellationToken);
+    }
+
+    public Task<TEntity?> FirstOrDefaultAsync(
+        Specification<TEntity, TId> specification,
+        CancellationToken cancellationToken,
+        IEnumerable<string>? includedProperties = null,
+        bool noTracking = true,
+        IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+        SortingOrder? sortingOrder = null)
+    {
+        var query = Set().GetFilteredQueryWithSorting(
+            specification, includedProperties ?? Array.Empty<string>(), noTracking, sortingExpressions: sortingExpressions, sortingOrder: sortingOrder);
+
+        return query.FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<TProjection?> FirstOrDefaultAsync<TProjection>(
+        Specification<TEntity, TId> specification,
+        Expression<Func<TEntity?, TProjection>> projectExpression,
+        CancellationToken cancellationToken,
+        IEnumerable<string>? includedProperties = null,
+        bool noTracking = true,
+        IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+        SortingOrder? sortingOrder = null)
+    {
+        var query = Set().GetFilteredQueryWithSorting(
+            specification, includedProperties ?? Array.Empty<string>(), noTracking, sortingExpressions: sortingExpressions, sortingOrder: sortingOrder);
+
+        return query.Select(projectExpression).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<TEntity[]> GetManyAsync(
+            Specification<TEntity, TId> specification,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null,
+            bool noTracking = true,
+            int skip = default,
+            int take = default,
+            IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+            SortingOrder? sortingOrder = null)
+    {
+        var query = Set().GetFilteredQueryWithSorting(
+            specification, includedProperties ?? Array.Empty<string>(), noTracking, skip, take, sortingExpressions, sortingOrder) as IQueryable<TEntity>;
+
+        return query.ToArrayAsync(cancellationToken);
+    }
+
+    public Task<TProjection[]> GetManyAsync<TProjection>(
+            Specification<TEntity, TId> specification,
+            Expression<Func<TEntity?, TProjection>> projectExpression,
+            CancellationToken cancellationToken,
+            IEnumerable<string>? includedProperties = null,
+            bool noTracking = true,
+            int skip = default,
+            int take = default,
+            IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+            SortingOrder? sortingOrder = null)
+    {
+        var query = Set().GetFilteredQueryWithSorting(
+            specification, projectExpression, includedProperties ?? Array.Empty<string>(), noTracking, skip, take, sortingExpressions, sortingOrder) as IQueryable<TProjection>;
+
+        return query.ToArrayAsync(cancellationToken);
+    }
+
+    public async Task UpdateAsync(
+        Specification<TEntity, TId> specification,
+        Action<TEntity> updateAction,
+        CancellationToken cancellationToken,
+        IEnumerable<string>? includedProperties = null)
+    {
+        var originalEntity = await FirstOrDefaultAsync(specification, cancellationToken, includedProperties, false)
+            ?? throw new Exception($"Could not find entity {typeof(TEntity).Name} by specification {specification.GetType().Name}");
+
+        updateAction(originalEntity);
+
+        await SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task UpdateRangeAsync(
+        Specification<TEntity, TId> specification,
+        Action<IEnumerable<TEntity>> updateAction,
+        CancellationToken cancellationToken,
+        IEnumerable<string>? includedProperties = null)
+    {
+        var originalEntitiesList = await GetManyAsync(specification, cancellationToken, includedProperties, false);
+
+        updateAction(originalEntitiesList);
+
+        await SaveChangesAsync(cancellationToken);
+    }
+
+    private Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return Context.SaveChangesAsync(cancellationToken);
+    }
+}

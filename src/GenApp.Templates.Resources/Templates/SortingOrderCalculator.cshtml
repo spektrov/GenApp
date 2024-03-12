@@ -1,0 +1,13 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public static class SortingOrderCalculator
+{
+    public static SortingOrder Calculate(string sort)
+    {
+        return sort?.Contains('-') ?? false ? SortingOrder.Desc : SortingOrder.Asc;
+    }
+}

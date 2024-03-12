@@ -1,0 +1,22 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class DatabaseContext : DbContext
+{
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+    {
+    }
+
+    @foreach (var set in Model.Sets)
+    {
+    @:public DbSet<@set.EntityName> @set.CollectionName { get; set; }
+    @:
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Bootstrap).Assembly);
+    }
+}

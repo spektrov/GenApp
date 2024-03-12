@@ -4,7 +4,7 @@ using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
 using GenApp.Templates.Resources.Models;
 
-namespace GenApp.DomainServices.CommandHandlers;
+namespace GenApp.DomainServices.CommandHandlers.DAL;
 internal class CustomMigrationsGenCommand(IFileGenService fileGenService) : IGenCommand
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)

@@ -1,0 +1,179 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public static class QueryableExtensions
+{
+    public static IQueryable<TEntity?> IncludeAll<TEntity, TId>(
+        this IQueryable<TEntity?> query,
+        IEnumerable<string>? includedProperties = null)
+        where TEntity : class, IBaseEntity<TId>
+    {
+        if (query == null)
+        {
+            throw new ArgumentNullException(nameof(query));
+        }
+
+        var includedPropertiesArray = includedProperties?.ToArray();
+
+        if (includedPropertiesArray == null || !includedPropertiesArray.Any())
+        {
+            return query;
+        }
+
+        foreach (var property in includedPropertiesArray)
+        {
+            query = query.Include(property);
+        }
+
+        return query;
+    }
+
+    public static IQueryable<TEntity?> GetFilteredQueryWithSorting<TEntity, TId>(
+        this IQueryable<TEntity?> query,
+        Specification<TEntity, TId> specification,
+        IEnumerable<string> includedProperties,
+        bool noTracking,
+        int skip = default,
+        int take = default,
+        IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+        SortingOrder? sortingOrder = null)
+        where TEntity : class, IBaseEntity<TId>
+    {
+        query = query.GetFilteredQuery(specification, includedProperties, noTracking);
+
+        if (sortingExpressions != null)
+        {
+            query = query.ApplySorting<TEntity, TId>(sortingExpressions, sortingOrder);
+        }
+
+        if (skip != default)
+        {
+            query = query.Skip(skip);
+        }
+
+        if (take != default)
+        {
+            query = query.Take(take);
+        }
+
+        return query;
+    }
+
+    public static IQueryable<TProjection?> GetFilteredQueryWithSorting<TEntity, TId, TProjection>(
+        this IQueryable<TEntity?> query,
+        Specification<TEntity, TId> specification,
+        Expression<Func<TEntity?, TProjection>> projectExpression,
+        IEnumerable<string> includedProperties,
+        bool noTracking,
+        int skip = default,
+        int take = default,
+        IEnumerable<Expression<Func<TEntity?, object>>>? sortingExpressions = null,
+        SortingOrder? sortingOrder = null)
+        where TEntity : class, IBaseEntity<TId>
+    {
+        query = query.GetFilteredQueryWithSorting(
+            specification, includedProperties, noTracking, skip, take, sortingExpressions, sortingOrder);
+
+        return query.Select(projectExpression);
+    }
+
+    public static IQueryable<TProjection?> GetDistinctFilteredQueryWithSorting<TEntity, TId, TProjection>(
+        this IQueryable<TEntity?> query,
+        Specification<TEntity, TId> specification,
+        Expression<Func<TEntity?, TProjection>> projectExpression,
+        IEnumerable<string> includedProperties,
+        bool noTracking,
+        int skip = default,
+        int take = default,
+        SortingOrder? sortingOrder = null)
+        where TEntity : class, IBaseEntity<TId>
+    {
+        query = query.GetFilteredQuery(specification, includedProperties, noTracking);
+
+        var projectionQuery = ApplySortingAndDistinct();
+
+        if (skip != default)
+        {
+            projectionQuery = projectionQuery.Skip(skip);
+        }
+
+        if (take != default)
+        {
+            projectionQuery = projectionQuery.Take(take);
+        }
+
+        return projectionQuery;
+
+        IQueryable<TProjection> ApplySortingAndDistinct()
+        {
+            var projectionQuery = query
+                .Select(projectExpression)
+                .Distinct();
+
+            sortingOrder ??= SortingOrder.Asc;
+
+            projectionQuery = sortingOrder == SortingOrder.Asc
+                ? projectionQuery.OrderBy(projection => projection)
+                : projectionQuery.OrderByDescending(projection => projection);
+
+            return projectionQuery;
+        }
+    }
+
+    public static IQueryable<TEntity?> GetFilteredQuery<TEntity, TId>(
+        this IQueryable<TEntity?> query,
+        Specification<TEntity, TId> specification,
+        IEnumerable<string> includedProperties,
+        bool noTracking)
+        where TEntity : class, IBaseEntity<TId>
+    {
+        query = query.IncludeAll<TEntity, TId>(includedProperties);
+
+        if (noTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        query = query.DefaultIfEmpty();
+
+        var expression = specification.Expression as Expression<Func<TEntity?, bool>>;
+        query = query.Where(expression);
+
+        return query;
+    }
+
+    private static IQueryable<TEntity?> ApplySorting<TEntity, TId>(
+        this IQueryable<TEntity?> query,
+        IEnumerable<Expression<Func<TEntity?, object>>> sortingExpressions,
+        SortingOrder? sortingOrder)
+        where TEntity : class, IBaseEntity<TId>
+    {
+        sortingOrder ??= SortingOrder.Asc;
+
+        var i = 0;
+        foreach (var sortingExpression in sortingExpressions)
+        {
+            if (i == 0)
+            {
+                query = sortingOrder == SortingOrder.Asc
+                    ? query.OrderBy(sortingExpression)
+                    : query.OrderByDescending(sortingExpression);
+            }
+            else
+            {
+                var orderedQuery = (IOrderedQueryable<TEntity?>)query;
+
+                query = sortingOrder == SortingOrder.Asc
+                    ? orderedQuery.ThenBy(sortingExpression)
+                    : orderedQuery.ThenByDescending(sortingExpression);
+            }
+
+            i++;
+        }
+
+        return query;
+    }
+}

@@ -1,0 +1,8 @@
+namespace @Model.Namespace;
+public static class PageCountCalculator
+{
+    public static int Calculate(int total, int take)
+    {
+        return (total / take) + (total % take > 0 ? 1 : 0);
+    }
+}

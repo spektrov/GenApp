@@ -1,0 +1,9 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public interface @Model.Name : IRepositoryBase<DatabaseContext, @Model.EntityName, @Model.KeyType>
+{
+}
