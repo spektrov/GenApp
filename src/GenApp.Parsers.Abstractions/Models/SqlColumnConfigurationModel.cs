@@ -1,4 +1,4 @@
-﻿namespace GenApp.Domain.Models;
+﻿namespace GenApp.Parsers.Abstractions.Models;
 public class SqlColumnConfigurationModel
 {
     required public string ColumnName { get; set; }

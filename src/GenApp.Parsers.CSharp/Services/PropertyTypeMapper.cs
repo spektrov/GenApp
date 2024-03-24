@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using GenApp.Domain.Constants;
 using GenApp.Domain.Enums;
+using GenApp.Parsers.Abstractions.Constants;
 
-namespace GenApp.DomainServices.Mappers;
+namespace GenApp.Parsers.CSharp.Services;
 public static class PropertyTypeMapper
 {
     public static string Map(DbmsType dbmsType, string sqlType)

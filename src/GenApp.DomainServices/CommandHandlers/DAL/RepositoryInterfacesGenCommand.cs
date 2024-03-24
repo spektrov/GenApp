@@ -1,27 +1,27 @@
 ﻿using System.IO.Compression;
-using GenApp.Domain.Constants;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
+using GenApp.Parsers.Abstractions.Interfaces;
 using GenApp.Templates.Resources.Models;
 
 namespace GenApp.DomainServices.CommandHandlers.DAL;
-internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService) : IGenCommand
+internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService, ICaseTransformer caseTransformer) : IGenCommand
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
         foreach (var entity in model.Entities)
         {
-            var name = entity.EntityName.ToPascalCase();
-            var entityName = name.ToEntityName();
-            var fileName = $"{name}{NameConstants.Repository}".ToInterfaceName().ToCsExtension();
+            var name = caseTransformer.ToPascalCase(entity.EntityName);
+            var entityName = $"{name}Entity";
+            var fileName = $"I{name}Repository.cs";
 
             await fileGenService.CreateEntryAsync(
                 archive,
-                $"{NameConstants.Interfaces}/{fileName}".ToDalProjectFile(model.AppName),
+                $"Interfaces/{fileName}".ToDalProjectFile(model.AppName),
                 new RepositoryInterfaceModel
                 {
-                    Name = $"{name}{NameConstants.Repository}".ToInterfaceName(),
+                    Name = $"I{name}Repository",
                     EntityName = entityName,
                     KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
                     Namespace = $"{model.AppName}.DAL.Interfaces",

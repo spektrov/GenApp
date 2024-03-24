@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Domain", "src\GenApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.DomainServices", "src\GenApp.DomainServices\GenApp.DomainServices.csproj", "{0FB8CC9B-2447-4564-BB87-1FDBF9592DC2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A9BB38AD-B0A7-4547-87E7-3745DFD4433C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ySolutionItems", "ySolutionItems", "{A9BB38AD-B0A7-4547-87E7-3745DFD4433C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
@@ -23,6 +23,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Templates.Abstractions", "src\GenApp.Templates.Abstractions\GenApp.Templates.Abstractions.csproj", "{63012E42-C8EC-44F2-9203-1E42ECB54E6F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{496084BB-0EC4-4B83-9819-332C35BC7345}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Parsers", "Parsers", "{50277B5B-5EC2-4A5C-9CBC-5404F819018F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{F017FB6A-EE3C-47C1-8CFB-7B8C4590D3B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{9DE2BD03-CA96-43DC-A6E5-9B73BD5C16AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Parsers.Sql", "src\GenApp.Parsers.Sql\GenApp.Parsers.Sql.csproj", "{5DEEEA34-FF99-4F47-BB4F-D08E7AA41C7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Parsers.Abstractions", "src\GenApp.Parsers.Abstractions\GenApp.Parsers.Abstractions.csproj", "{6F4856F3-9BA7-4053-8B73-570E6E25CC17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Parsers.CSharp", "src\GenApp.Parsers.Csharp\GenApp.Parsers.CSharp.csproj", "{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,14 +66,32 @@ Global
 		{63012E42-C8EC-44F2-9203-1E42ECB54E6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63012E42-C8EC-44F2-9203-1E42ECB54E6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63012E42-C8EC-44F2-9203-1E42ECB54E6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DEEEA34-FF99-4F47-BB4F-D08E7AA41C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DEEEA34-FF99-4F47-BB4F-D08E7AA41C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DEEEA34-FF99-4F47-BB4F-D08E7AA41C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DEEEA34-FF99-4F47-BB4F-D08E7AA41C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4856F3-9BA7-4053-8B73-570E6E25CC17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4856F3-9BA7-4053-8B73-570E6E25CC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4856F3-9BA7-4053-8B73-570E6E25CC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4856F3-9BA7-4053-8B73-570E6E25CC17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{406EA106-B50C-4E36-92B5-51F2650032DA} = {F017FB6A-EE3C-47C1-8CFB-7B8C4590D3B8}
+		{80EDC8E2-06A8-47BA-80DD-15404D3D0A56} = {9DE2BD03-CA96-43DC-A6E5-9B73BD5C16AE}
+		{0FB8CC9B-2447-4564-BB87-1FDBF9592DC2} = {9DE2BD03-CA96-43DC-A6E5-9B73BD5C16AE}
 		{32D0BF23-63F8-4CC9-AAEC-4B89CEDA1190} = {496084BB-0EC4-4B83-9819-332C35BC7345}
 		{18FB159A-9692-4715-93CB-1FABFEB89033} = {496084BB-0EC4-4B83-9819-332C35BC7345}
 		{63012E42-C8EC-44F2-9203-1E42ECB54E6F} = {496084BB-0EC4-4B83-9819-332C35BC7345}
+		{5DEEEA34-FF99-4F47-BB4F-D08E7AA41C7B} = {50277B5B-5EC2-4A5C-9CBC-5404F819018F}
+		{6F4856F3-9BA7-4053-8B73-570E6E25CC17} = {50277B5B-5EC2-4A5C-9CBC-5404F819018F}
+		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3} = {50277B5B-5EC2-4A5C-9CBC-5404F819018F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FD9D745-6FB8-4540-A378-861CD604080E}

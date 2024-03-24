@@ -1,7 +1,23 @@
-﻿namespace GenApp.Domain.Models;
-public class ApplicationDataModel : GenSettingsModel
-{
-    public IEnumerable<DotnetEntityConfigurationModel> Entities { get; set; }
+﻿using GenApp.Domain.Enums;
 
-    public IEnumerable<SqlTableConfigurationModel> Tables { get; set; }
+namespace GenApp.Domain.Models;
+public class ApplicationDataModel
+{
+    public DbmsType DbmsType { get; set; }
+
+    public string SqlTableScript { get; set; }
+
+    public string AppName { get; set; }
+
+    public string DotnetSdkVersion { get; set; }
+
+    public bool UseDocker { get; set; }
+
+    public string DalProjectName { get; set; }
+
+    public string BllProjectName { get; set; }
+
+    public string ApiProjectName { get; set; }
+
+    public IEnumerable<DotnetEntityConfigurationModel> Entities { get; set; }
 }

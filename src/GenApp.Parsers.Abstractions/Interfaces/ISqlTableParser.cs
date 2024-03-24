@@ -1,7 +1,8 @@
 ﻿using FluentResults;
 using GenApp.Domain.Models;
+using GenApp.Parsers.Abstractions.Models;
 
-namespace GenApp.Domain.Interfaces;
+namespace GenApp.Parsers.Abstractions.Interfaces;
 
 public interface ISqlTableParser
 {

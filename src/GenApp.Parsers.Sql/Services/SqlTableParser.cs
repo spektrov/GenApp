@@ -1,9 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 using FluentResults;
-using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
+using GenApp.Parsers.Abstractions.Interfaces;
+using GenApp.Parsers.Abstractions.Models;
 
-namespace GenApp.DomainServices.Services;
+namespace GenApp.Parsers.Sql.Services;
 internal class SqlTableParser : ISqlTableParser
 {
     private static readonly string createTableSeparator = "create table";

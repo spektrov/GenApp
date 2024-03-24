@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="FluentResults" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\GenApp.Domain\GenApp.Domain.csproj" />
+	</ItemGroup>
+</Project>

@@ -1,4 +1,6 @@
-﻿namespace GenApp.Domain.Constants;
+﻿using GenApp.Domain.Constants;
+
+namespace GenApp.Parsers.Abstractions.Constants;
 
 public static class DotnetMsSqlServerTypes
 {

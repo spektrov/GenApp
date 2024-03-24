@@ -10,7 +10,7 @@ public class SolutionGenService(
     IEnumerable<IGenCommand> commands)
     : ISolutionGenService
 {
-    public async Task<Result<Stream>> GenerateApplicationAsync(GenSettingsModel settings, CancellationToken token)
+    public async Task<Result<Stream>> GenerateApplicationAsync(ApplicationDataModel settings, CancellationToken token)
     {
         var model = applicationDataMapper.Map(settings);
         if (model.IsFailed)

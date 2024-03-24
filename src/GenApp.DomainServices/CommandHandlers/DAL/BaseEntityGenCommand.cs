@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using GenApp.Domain.Constants;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
@@ -10,8 +9,8 @@ internal class BaseEntityGenCommand(IFileGenService fileGenService) : IGenComman
 {
     public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var fileName = "BaseEntity".ToInterfaceName().ToCsExtension();
-        var dirName = NameConstants.Interfaces;
+        var fileName = "IBaseEntity.cs";
+        var dirName = "Interfaces";
 
         return fileGenService.CreateEntryAsync(
             archive,
