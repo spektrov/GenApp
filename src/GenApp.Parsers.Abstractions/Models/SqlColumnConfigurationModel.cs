@@ -10,6 +10,15 @@ public class SqlColumnConfigurationModel
     public bool IsPrimaryKey { get; set; }
 
     public bool IsForeignKey { get; set; }
+}
 
-    public string? RelationToTable { get; set; }
+public class SqlRelationConfiguration
+{
+    public string SourceTable { get; set; }
+
+    public string TargetTable { get; set; }
+
+    public string SourceColumn { get; set; }
+
+    public string TargetColumn { get; set; }
 }

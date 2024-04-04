@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using GenApp.Domain.Models;
 using GenApp.Parsers.Abstractions.Models;
 
 namespace GenApp.Parsers.Abstractions.Interfaces;

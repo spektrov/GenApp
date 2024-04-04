@@ -1,89 +1,45 @@
 ﻿using System.Text.RegularExpressions;
 using FluentResults;
-using GenApp.Domain.Models;
 using GenApp.Parsers.Abstractions.Interfaces;
 using GenApp.Parsers.Abstractions.Models;
+using GenApp.Parsers.Sql.Interfaces;
 
 namespace GenApp.Parsers.Sql.Services;
-internal class SqlTableParser : ISqlTableParser
+internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 {
-    private static readonly string createTableSeparator = "create table";
     private static readonly string TablePropertyPattern = @"\,\d+|[\)\(;]|\b\d+\b|[\n]";
-    private static readonly char ComaSeparator = ',';
-    private static readonly char SpaceSeparator = ' ';
-    private static readonly string LineSeparator = "\n";
-    private static readonly string NotNull = "not null";
-    private static readonly string Unique = "unique";
-    private static readonly string PrimaryKey = "primary key";
 
     public Result<IEnumerable<SqlTableConfigurationModel>> BuildTablesConfiguration(string sqlCreateTables)
     {
-        // Split script into individual statements
-        var singleLineSqlScript = sqlCreateTables.Replace(LineSeparator, string.Empty);
-        var statements = Regex.Split(singleLineSqlScript, createTableSeparator, RegexOptions.IgnoreCase)
+        // Split script into individual 'create table' statements
+        var singleLineSqlScript = sqlCreateTables.Replace(Constants.LineSeparator, string.Empty);
+        var statements = Regex.Split(singleLineSqlScript, Constants.CreateTable, RegexOptions.IgnoreCase)
             .Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim());
 
         var tableConfigResults = statements.Select(BuildTableConfiguration).ToList();
 
         return tableConfigResults.Any(tc => tc.IsFailed)
-            ? tableConfigResults.First(tc => tc.IsFailed).ToResult()
+            ? Result.Fail(tableConfigResults.Where(x => x.IsFailed).SelectMany(x => x.Errors))
             : Result.Ok(tableConfigResults.Select(tc => tc.Value));
     }
 
-    public Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
+    private Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
     {
-        var tableName = tableLine.Split(SpaceSeparator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim();
+        var tableName = tableLine.Split(Constants.SpaceSeparator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim();
         var allItems = Regex.Replace(tableLine, TablePropertyPattern, string.Empty)[tableName.Length..];
 
-        var items = allItems.Split(ComaSeparator, StringSplitOptions.TrimEntries);
-        var aItems = items.Where(x => !string.IsNullOrWhiteSpace(x));
-        var columns = aItems.Select(BuildColumnConfiguration);
+        var items = allItems.Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
+            .Where(x => !string.IsNullOrWhiteSpace(x));
 
-        if (columns.Any(x => x.IsFailed))
-        {
-            return Result.Fail(columns.Where(x => x.IsFailed).SelectMany(x => x.Errors));
-        }
+        var columns = items.Where(sqlRowParser.IsPlainColumn).Select(sqlRowParser.BuildColumnConfiguration);
+
+        var relations = items.Where(x => !sqlRowParser.IsPlainColumn(x)).Select(sqlRowParser.BuildRelationConfiguration);
+
 
         return new SqlTableConfigurationModel
         {
             TableName = tableName,
-            Columns = columns.Where(x => x.IsSuccess).Select(x => x.Value),
+            Columns = columns,
         };
-    }
-
-    private Result<SqlColumnConfigurationModel> BuildColumnConfiguration(string columnLine)
-    {
-        // Split column line into components and remove leading/trailing white space from each component
-        var columnComponents = columnLine.Split(SpaceSeparator)
-            .Select(component => component.Trim()).ToList();
-
-        if (columnComponents.Count < 2)
-        {
-            return Result.Fail($"Cannot define name, type, and constraints on column\n{columnLine}");
-        }
-
-        var column = new SqlColumnConfigurationModel
-        {
-            ColumnName = columnComponents[0], // First component should be column name
-            ColumnType = columnComponents[1], // Second component should be column type
-            NotNull = DefineIfNotNull(columnLine),
-            IsPrimaryKey = DefineIfPrimaryKey(columnLine),
-        };
-
-        return column;
-    }
-
-    private bool DefineIfPrimaryKey(string columnDefinition)
-    {
-        return columnDefinition.Contains(PrimaryKey, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private bool DefineIfNotNull(string columnDefinition)
-    {
-        var isNotNull = columnDefinition.Contains(NotNull, StringComparison.OrdinalIgnoreCase)
-            || columnDefinition.Contains(Unique, StringComparison.OrdinalIgnoreCase)
-            || DefineIfPrimaryKey(columnDefinition);
-
-        return isNotNull;
     }
 }

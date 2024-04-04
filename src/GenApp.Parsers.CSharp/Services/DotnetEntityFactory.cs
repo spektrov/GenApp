@@ -7,7 +7,8 @@ using GenApp.Parsers.Abstractions.Models;
 namespace GenApp.Parsers.CSharp.Services;
 internal class DotnetEntityFactory(ICaseTransformer caseTransformer) : IDotnetEntityFactory
 {
-    public Result<IEnumerable<DotnetEntityConfigurationModel>> Create(IEnumerable<SqlTableConfigurationModel> tables, DbmsType dbms)
+    public Result<IEnumerable<DotnetEntityConfigurationModel>> Create(
+        IEnumerable<SqlTableConfigurationModel> tables, DbmsType dbms)
     {
         var entities = tables.Select(table => new DotnetEntityConfigurationModel
         {
