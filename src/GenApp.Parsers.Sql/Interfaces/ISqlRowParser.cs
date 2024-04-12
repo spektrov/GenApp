@@ -7,5 +7,7 @@ public interface ISqlRowParser
 
     SqlColumnConfigurationModel BuildColumnConfiguration(string columnLine);
 
-    SqlRelationConfiguration BuildRelationConfiguration(string columnLine);
+    SqlRelationConfiguration? BuildRelationConfiguration(string columnLine);
+
+    SqlPrimaryKeyConfiguration GetSqlPrimaryKeyConfiguration(string pkDefinition);
 }

@@ -26,20 +26,64 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     private Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
     {
         var tableName = tableLine.Split(Constants.SpaceSeparator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim();
-        var allItems = Regex.Replace(tableLine, TablePropertyPattern, string.Empty)[tableName.Length..];
+        var otherItems = tableLine[tableName.Length..];
 
-        var items = allItems.Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
+        var definitions = otherItems.Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
             .Where(x => !string.IsNullOrWhiteSpace(x));
 
-        var columns = items.Where(sqlRowParser.IsPlainColumn).Select(sqlRowParser.BuildColumnConfiguration);
+        var columns = definitions
+            .Where(sqlRowParser.IsPlainColumn)
+            .Select(ToPropertyPattern)
+            .Select(sqlRowParser.BuildColumnConfiguration)
+            .ToList();
 
-        var relations = items.Where(x => !sqlRowParser.IsPlainColumn(x)).Select(sqlRowParser.BuildRelationConfiguration);
-
+        AddPrimaryKey(columns, definitions);
+        AddForeignKeys(columns, definitions);
 
         return new SqlTableConfigurationModel
         {
             TableName = tableName,
             Columns = columns,
         };
+    }
+
+    private void AddPrimaryKey(IEnumerable<SqlColumnConfigurationModel> columns, IEnumerable<string> definitions)
+    {
+        var pkDefinition = definitions.FirstOrDefault(definition =>
+            definition.Contains(Constants.PrimaryKey, StringComparison.OrdinalIgnoreCase));
+
+        if (pkDefinition == null) return;
+
+        var primaryKey = sqlRowParser.GetSqlPrimaryKeyConfiguration(pkDefinition);
+
+        columns
+            .Where(column => primaryKey.SourceColumns.Any(col => col == column.ColumnName))
+            .ToList()
+            .ForEach(column => column.IsPrimaryKey = true);
+    }
+
+    private void AddForeignKeys(IEnumerable<SqlColumnConfigurationModel> columns, IEnumerable<string> definitions)
+    {
+        var foreignKeys = definitions.Select(sqlRowParser.BuildRelationConfiguration);
+        var foreignKeysLookup = foreignKeys.Where(fk => fk is not null)
+            .SelectMany(fk => fk.SourceColumns, (fk, sourceColumn) => new { sourceColumn, fk })
+            .ToLookup(x => x.sourceColumn, x => x.fk);
+
+        foreach (var column in columns)
+        {
+            var relation = foreignKeysLookup[column.ColumnName].FirstOrDefault();
+            if (relation != null)
+            {
+                column.IsForeignKey = true;
+                column.Relation = relation;
+                relation.IsOneToOne = column.Unique;
+                relation.IsRequired = column.NotNull;
+            }
+        }
+    }
+
+    private string ToPropertyPattern(string line)
+    {
+        return Regex.Replace(line, TablePropertyPattern, string.Empty);
     }
 }
