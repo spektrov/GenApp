@@ -16,7 +16,7 @@ public class GenAppController(IMapper mapper, ISolutionGenService solutionGenSer
         [FromBody] GenSettingsDto genSettingsDto,
         CancellationToken token)
     {
-        var settingsModel = mapper.Map<GenSettingsModel>(genSettingsDto);
+        var settingsModel = mapper.Map<ApplicationDataModel>(genSettingsDto);
         Response.Headers.Append("Content-Disposition", $"attachment; filename={settingsModel.AppName}.zip");
         return await solutionGenService.GenerateApplicationAsync(settingsModel, token);
     }

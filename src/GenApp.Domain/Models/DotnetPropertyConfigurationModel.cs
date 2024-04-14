@@ -9,7 +9,7 @@ public class DotnetPropertyConfigurationModel
 
     public bool IsId { get; set; }
 
-    public bool IsNavigationKey { get; set; }
+    public bool IsNavigation { get; set; }
 
-    public string? RelationToEntity { get; set; }
+    public DotnetEntityRelationModel? Relation { get; set; }
 }

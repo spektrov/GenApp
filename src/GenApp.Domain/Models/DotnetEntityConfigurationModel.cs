@@ -3,5 +3,5 @@ public class DotnetEntityConfigurationModel
 {
     required public string EntityName { get; set; }
 
-    public IEnumerable<DotnetPropertyConfigurationModel> Properties { get; set; }
+    public ICollection<DotnetPropertyConfigurationModel> Properties { get; set; }
 }

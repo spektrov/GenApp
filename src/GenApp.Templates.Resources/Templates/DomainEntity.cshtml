@@ -9,8 +9,14 @@ public class @Model.EntityName : IBaseEntity<@Model.KeyType>
 {
     @foreach (var property in Model.Properties)
     {
+        if (property.IsCollectionNavigation == true)
+        {
+    @:public ICollection<@property.Type> @property.Name { get; set; }
+        }
+        else
+        {
     @:public @property.Type @property.Name { get; set; }
+        }
     @:
     }
-    public DateTime LastModifiedTime { get; set; }
 }

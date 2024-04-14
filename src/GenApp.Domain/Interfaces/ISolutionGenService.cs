@@ -5,5 +5,5 @@ namespace GenApp.Domain.Interfaces;
 
 public interface ISolutionGenService
 {
-    Task<Result<Stream>> GenerateApplicationAsync(GenSettingsModel settings, CancellationToken token);
+    Task<Result<Stream>> GenerateApplicationAsync(ApplicationDataModel settings, CancellationToken token);
 }

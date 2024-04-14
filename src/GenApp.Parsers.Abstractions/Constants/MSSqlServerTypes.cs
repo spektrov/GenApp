@@ -1,4 +1,4 @@
-﻿namespace GenApp.Domain.Constants;
+﻿namespace GenApp.Parsers.Abstractions.Constants;
 public static class MSSqlServerTypes
 {
     public const string Bit = "bit";

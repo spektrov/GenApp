@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using GenApp.Domain.Constants;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
@@ -10,8 +9,8 @@ internal class BaseRepositoryGenCommand(IFileGenService fileGenService) : IGenCo
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var fileName = "RepositoryBase".ToInterfaceName().ToCsExtension();
-        var dirName = NameConstants.Interfaces;
+        var fileName = "IRepositoryBase.cs";
+        var dirName = "Interfaces";
 
         await fileGenService.CreateEntryAsync(
            archive,

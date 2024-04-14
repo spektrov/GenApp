@@ -1,17 +1,18 @@
-﻿using Humanizer;
+﻿using GenApp.Parsers.Abstractions.Interfaces;
+using Humanizer;
 
-namespace GenApp.DomainServices.Extensions;
+namespace GenApp.Parsers.CSharp.Services;
 
-public static class NamingCasesExtensions
+internal class CaseTransformer : ICaseTransformer
 {
     /// <summary>
     /// Transforms string into camelCase.
     /// </summary>
     /// <param name="str">Input string.</param>
     /// <returns>Transformed string.</returns>
-    public static string ToCamelCase(this string str)
+    public string ToCamelCase(string str)
     {
-        var result = str.ToPascalCase();
+        var result = ToPascalCase(str);
         return !string.IsNullOrWhiteSpace(result)
             ? char.ToLower(result[0]) + result[1..]
             : result;
@@ -22,9 +23,9 @@ public static class NamingCasesExtensions
     /// </summary>
     /// <param name="str">Input string.</param>
     /// <returns>Transformed string.</returns>
-    public static string ToCamelUnderscoreCase(this string str)
+    public string ToCamelUnderscoreCase(string str)
     {
-        var result = str.ToPascalCase();
+        var result = ToPascalCase(str);
         return !string.IsNullOrWhiteSpace(result)
             ? "_" + char.ToLower(result[0]) + result[1..]
             : result;
@@ -35,9 +36,9 @@ public static class NamingCasesExtensions
     /// </summary>
     /// <param name="str">Input string.</param>
     /// <returns>Transformed string.</returns>
-    public static string ToSnakeCase(this string str)
+    public string ToSnakeCase(string str)
     {
-        var result = str.ToPascalCase();
+        var result = ToPascalCase(str);
         return !string.IsNullOrWhiteSpace(result)
             ? string.Concat(result.Select(TransformSnake))
             : result;
@@ -48,7 +49,7 @@ public static class NamingCasesExtensions
     /// </summary>
     /// <param name="str">Input string.</param>
     /// <returns>Transformed string.</returns>
-    public static string ToPascalCase(this string str)
+    public string ToPascalCase(string str)
     {
         if (string.IsNullOrWhiteSpace(str)) return str;
 
@@ -63,11 +64,27 @@ public static class NamingCasesExtensions
     /// </summary>
     /// <param name="str">Input string.</param>
     /// <returns>Transformed string.</returns>
-    public static string ToPlural(this string str)
+    public string ToPlural(string str)
     {
-        var words = str.ToSnakeCase().Split('_');
+        var words = ToSnakeCase(str).Split('_');
         var other = string.Join('_', words[..^1]);
         var last = words.Last().Pluralize();
+
+        return !string.IsNullOrWhiteSpace(other)
+            ? $"{other}_{last}"
+            : last;
+    }
+
+    /// <summary>
+    /// Transforms string to it's English singular form.
+    /// </summary>
+    /// <param name="str">Input string.</param>
+    /// <returns>Transformed string.</returns>
+    public string ToSignular(string str)
+    {
+        var words = ToSnakeCase(str).Split('_');
+        var other = string.Join('_', words[..^1]);
+        var last = words.Last().Singularize();
 
         return !string.IsNullOrWhiteSpace(other)
             ? $"{other}_{last}"
