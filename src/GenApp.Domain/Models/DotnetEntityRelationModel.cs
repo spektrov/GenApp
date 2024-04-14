@@ -8,4 +8,6 @@ public class DotnetEntityRelationModel
     public bool IsOneToOne { get; set; }
 
     public bool IsRequired { get; set; }
+
+    public bool IsReverted { get; set; }
 }

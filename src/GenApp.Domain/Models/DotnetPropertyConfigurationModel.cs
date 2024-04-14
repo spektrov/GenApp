@@ -8,4 +8,8 @@ public class DotnetPropertyConfigurationModel
     public bool NotNull { get; set; }
 
     public bool IsId { get; set; }
+
+    public bool IsNavigation { get; set; }
+
+    public DotnetEntityRelationModel? Relation { get; set; }
 }

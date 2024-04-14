@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\GenApp.Parsers.Abstractions\GenApp.Parsers.Abstractions.csproj" />
     <ProjectReference Include="..\GenApp.Domain\GenApp.Domain.csproj" />
-    <ProjectReference Include="..\GenApp.Parsers.Abstractions\GenApp.Parsers.Abstractions.csproj" />
     <ProjectReference Include="..\GenApp.Templates.Resources\GenApp.Templates.Resources.csproj" />
   </ItemGroup>
 

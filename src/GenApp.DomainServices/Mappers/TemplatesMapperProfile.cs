@@ -8,6 +8,7 @@ public class TemplatesMapperProfile : Profile
     public TemplatesMapperProfile()
     {
         CreateMap<DotnetPropertyConfigurationModel, DotnetPropertyDto>()
-            .ForMember(dest => dest.Nullable, src => src.MapFrom(x => x.NotNull ? string.Empty : "?"));
+            .ForMember(dest => dest.Nullable, src => src.MapFrom(x => x.NotNull ? string.Empty : "?"))
+            .ForMember(dest => dest.IsCollectionNavigation, src => src.MapFrom(x => x.Relation != null ? !x.Relation.IsOneToOne && !x.Relation.IsReverted : false));
     }
 }

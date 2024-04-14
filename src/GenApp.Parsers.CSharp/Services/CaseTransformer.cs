@@ -75,6 +75,22 @@ internal class CaseTransformer : ICaseTransformer
             : last;
     }
 
+    /// <summary>
+    /// Transforms string to it's English singular form.
+    /// </summary>
+    /// <param name="str">Input string.</param>
+    /// <returns>Transformed string.</returns>
+    public string ToSignular(string str)
+    {
+        var words = ToSnakeCase(str).Split('_');
+        var other = string.Join('_', words[..^1]);
+        var last = words.Last().Singularize();
+
+        return !string.IsNullOrWhiteSpace(other)
+            ? $"{other}_{last}"
+            : last;
+    }
+
     private static bool IsValid(char ch)
     {
         return char.IsLetter(ch);

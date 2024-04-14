@@ -10,4 +10,6 @@ public interface ICaseTransformer
     string ToPascalCase(string str);
 
     string ToPlural(string str);
+
+    string ToSignular(string str);
 }

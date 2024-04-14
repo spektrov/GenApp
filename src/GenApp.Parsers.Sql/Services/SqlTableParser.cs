@@ -25,7 +25,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 
     private Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
     {
-        var tableName = tableLine.Split(Constants.SpaceSeparator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim();
+        var tableName = tableLine.Split(Constants.SpaceSeparator, StringSplitOptions.RemoveEmptyEntries).First().Trim();
         var otherItems = tableLine[tableName.Length..];
 
         var definitions = otherItems.Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
@@ -38,7 +38,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
             .ToList();
 
         AddPrimaryKey(columns, definitions);
-        AddForeignKeys(columns, definitions);
+        AddForeignKeys(columns, definitions, tableName);
 
         return new SqlTableConfigurationModel
         {
@@ -62,7 +62,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
             .ForEach(column => column.IsPrimaryKey = true);
     }
 
-    private void AddForeignKeys(IEnumerable<SqlColumnConfigurationModel> columns, IEnumerable<string> definitions)
+    private void AddForeignKeys(IEnumerable<SqlColumnConfigurationModel> columns, IEnumerable<string> definitions, string sourceTable)
     {
         var foreignKeys = definitions.Select(sqlRowParser.BuildRelationConfiguration);
         var foreignKeysLookup = foreignKeys.Where(fk => fk is not null)
@@ -75,9 +75,10 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
             if (relation != null)
             {
                 column.IsForeignKey = true;
-                column.Relation = relation;
+                relation.SourceTable = sourceTable;
                 relation.IsOneToOne = column.Unique;
                 relation.IsRequired = column.NotNull;
+                column.Relation = relation;
             }
         }
     }

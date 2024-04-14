@@ -2,7 +2,7 @@
 using GenApp.Domain.Enums;
 using GenApp.Parsers.Abstractions.Constants;
 
-namespace GenApp.Parsers.CSharp.Services;
+namespace GenApp.Parsers.CSharp.Mappers;
 public static class PropertyTypeMapper
 {
     public static string Map(DbmsType dbmsType, string sqlType)
