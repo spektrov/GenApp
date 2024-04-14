@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Domain", "src\GenApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.DomainServices", "src\GenApp.DomainServices\GenApp.DomainServices.csproj", "{0FB8CC9B-2447-4564-BB87-1FDBF9592DC2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ySolutionItems", "ySolutionItems", "{A9BB38AD-B0A7-4547-87E7-3745DFD4433C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_SolutionItems", "{A9BB38AD-B0A7-4547-87E7-3745DFD4433C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props

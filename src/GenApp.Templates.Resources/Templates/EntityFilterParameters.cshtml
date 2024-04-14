@@ -1,0 +1,28 @@
+using System.Text.Json.Serialization;
+
+namespace @Model.Namespace;
+public class @Model.Name
+{
+    @for (int i = 0; i < Model.Properties.Count; i++)
+    {
+        var property = Model.Properties[i];
+    @:[JsonPropertyName("@property.JsonName")]
+        if (property.IsSearch)
+        {
+    @:public @property.Type? @property.FilterName { get; set; }
+        }
+        else if (property.IsRange)
+        {
+    @:public RangeParameters<@property.Type>? @property.FilterName { get; set; }
+        }
+        else if (property.IsFilter)
+        {
+    @:public @(property.Type)[]? @property.FilterName { get; set; }
+        }
+
+        if (i != Model.Properties.Count - 1)
+        {
+    @:
+        }
+    }
+}

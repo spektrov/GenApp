@@ -27,4 +27,12 @@ public static class TemplateNames
     public const string SortingOrderCalculator = nameof(SortingOrderCalculator);
 
     public const string DatabaseContext = nameof(DatabaseContext);
+
+    public const string FilterParameters = nameof(FilterParameters);
+
+    public const string AppJsonSerializerOptions = nameof(AppJsonSerializerOptions);
+
+    public const string RangeParameters = nameof(RangeParameters);
+
+    public const string EntityFilterParameters = nameof(EntityFilterParameters);
 }

@@ -7,9 +7,10 @@ namespace @Model.Namespace;
 
 public class @Model.EntityName : IBaseEntity<@Model.KeyType>
 {
-    @foreach (var property in Model.Properties)
+    @for (int i = 0; i < Model.Properties.Count; i++)
     {
-        if (property.IsCollectionNavigation == true)
+        var property = Model.Properties[i];
+        if (property.IsCollectionNavigation)
         {
     @:public ICollection<@property.Type> @property.Name { get; set; }
         }
@@ -17,6 +18,9 @@ public class @Model.EntityName : IBaseEntity<@Model.KeyType>
         {
     @:public @property.Type @property.Name { get; set; }
         }
+        if (i != Model.Properties.Count - 1)
+        {
     @:
+        }
     }
 }
