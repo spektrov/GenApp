@@ -35,4 +35,20 @@ public static class TemplateNames
     public const string RangeParameters = nameof(RangeParameters);
 
     public const string EntityFilterParameters = nameof(EntityFilterParameters);
+
+    public const string AndSpecification = nameof(AndSpecification);
+
+    public const string NotSpecification = nameof(NotSpecification);
+
+    public const string OrSpecification = nameof(OrSpecification);
+
+    public const string TrueSpecification = nameof(TrueSpecification);
+
+    public const string AggregateSpecification = nameof(AggregateSpecification);
+
+    public const string Specification = nameof(Specification);
+
+    public const string SpecificationExtensions = nameof(SpecificationExtensions);
+
+    public const string OperationExtensions = nameof(OperationExtensions);
 }

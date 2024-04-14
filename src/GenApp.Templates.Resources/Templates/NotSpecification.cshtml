@@ -1,0 +1,18 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class NotSpecification<T, TId> : Specification<T, TId>
+    where T : IBaseEntity<TId>
+{
+    private readonly Specification<T, TId> _spec1;
+
+    public NotSpecification(Specification<T, TId> spec1)
+    {
+        _spec1 = spec1;
+    }
+
+    public override Expression<Func<T, bool>> Expression => _spec1.Expression.Not();
+}

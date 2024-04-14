@@ -1,0 +1,36 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public static class SpecificationExtensions
+{
+    public static Specification<T, TId> ApplyRangeFilter<T, TId, TProperty>(
+           this Specification<T, TId> aggregateSpecification,
+           RangeParameters<TProperty>? range,
+           Func<TProperty, Specification<T, TId>> specFrom,
+           Func<TProperty, Specification<T, TId>> specTo)
+           where T : class, IBaseEntity<TId>
+           where TProperty : struct
+    {
+        var result = aggregateSpecification;
+
+        if (range?.Min == null && range?.Max == null)
+        {
+            return result;
+        }
+
+        if (range.Min.HasValue)
+        {
+            result &= specFrom(range.Min.Value);
+        }
+
+        if (range.Max.HasValue)
+        {
+            result &= specTo(range.Max.Value);
+        }
+
+        return result;
+    }
+}
