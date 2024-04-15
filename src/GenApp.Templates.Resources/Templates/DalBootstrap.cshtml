@@ -1,0 +1,26 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public static class Bootstrap
+{
+    public static void AddDataLayer(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSqlContext(configuration);
+        services.AddRepositories();
+    }
+
+    private static void AddSqlContext(this IServiceCollection services, IConfiguration configuration) =>
+        services.AddDbContext<DatabaseContext>(opts =>
+            opts.@(Model.DbmsUsage)(configuration.GetConnectionString("SqlConnectionString")!));
+
+    private static void AddRepositories(this IServiceCollection services)
+    {
+    @foreach (var injection in Model.Injections)
+    {
+        @:services.AddScoped<@injection.InterfaceName, @injection.ClassName>();
+    }
+    }
+}

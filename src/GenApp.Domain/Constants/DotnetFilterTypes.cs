@@ -34,4 +34,20 @@ public static class DotnetFilterTypes
         DotnetTypes.DateTimeOffset,
         DotnetTypes.TimeSpan,
     ];
+
+    public static IEnumerable<string> Sort =>
+    [
+        DotnetTypes.Bool,
+        DotnetTypes.String,
+        DotnetTypes.Byte,
+        DotnetTypes.Short,
+        DotnetTypes.Int,
+        DotnetTypes.Long,
+        DotnetTypes.Float,
+        DotnetTypes.Double,
+        DotnetTypes.Decimal,
+        DotnetTypes.DateTime,
+        DotnetTypes.DateTimeOffset,
+        DotnetTypes.TimeSpan,
+    ];
 }

@@ -1,0 +1,108 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+internal class @Model.RepositoryName : RepositoryBase<DatabaseContext, @Model.EntityName, @Model.KeyType>, @Model.InterfaceName
+{
+    public @(Model.RepositoryName)(DatabaseContext context) : base(context) { }
+
+    public override Specification<@Model.EntityName, @Model.KeyType> BuildSpecification(FilterParameters parameters)
+    {
+        var aggregateSpecification = base.BuildSpecification(parameters);
+
+        @if (Model.FilterParameters.Count > 0)
+        {
+        @:if (!string.IsNullOrEmpty(parameters.Filter))
+        @:{
+            @:var filters = JsonSerializer.Deserialize<@Model.FilterParametersName>(parameters.Filter, JsonSerializerOptions.Default);
+
+            for (int i = 0; i < Model.FilterParameters.Count; i++)
+            {
+                var filterParameter = Model.FilterParameters[i];
+            @:if (filters?.@filterParameter.PropertyName != null)
+            @:{
+            @:    aggregateSpecification &= new @(filterParameter.SpecificationName)(filters.@filterParameter.PropertyName);
+            @:}
+                if (i != Model.FilterParameters.Count - 1)
+                {
+            @:
+                }
+            }
+        @:}
+        }
+
+        @if (Model.SearchParameters.Count > 0)
+        {
+        @:if (!string.IsNullOrEmpty(parameters.Search))
+        @:{
+            @:var search = JsonSerializer.Deserialize<@Model.SearchParametersName>(parameters.Search, JsonSerializerOptions.Default);
+
+            for (int i = 0; i < Model.SearchParameters.Count; i++)
+            {
+                var searchParameter = Model.SearchParameters[i];
+            @:if (search?.@searchParameter.PropertyName != null)
+            @:{
+            @:    aggregateSpecification &= new @(searchParameter.SpecificationName)(search.@searchParameter.PropertyName);
+            @:}
+                if (i != Model.SearchParameters.Count - 1)
+                {
+            @:
+                }
+            }
+        @:}
+        }
+
+        @if (Model.RangeParameters.Count > 0)
+        {
+        @:if (!string.IsNullOrEmpty(parameters.Range))
+        @:{
+            @:var ranges = JsonSerializer.Deserialize<@Model.RangeParametersName>(parameters.Range, JsonSerializerOptions.Default);
+
+            for (int i = 0; i < Model.RangeParameters.Count; i++)
+            {
+                var rangeParameter = Model.RangeParameters[i];
+            @:if (ranges?.@rangeParameter.PropertyName != null)
+            @:{
+                @:    aggregateSpecification &= new @(rangeParameter.SpecificationName)(ranges.@rangeParameter.PropertyName);
+            @:}
+                if (i != Model.RangeParameters.Count - 1)
+                {
+            @:
+                }
+            }
+        @:}
+        }
+
+        return aggregateSpecification;
+    }
+
+    public override IEnumerable<Expression<Func<@Model.EntityName?, object>>> BuildSortingExpression(string sorting)
+    {
+        @if (Model.SortParameters.Count > 1)
+        {
+            var first = Model.SortParameters[0];
+        @:if (sorting?.Contains("@first.JsonName") ?? false)
+        @:{
+        @:    yield return x => x!.@first.SortName;
+        @:}
+            for (int i = 1; i < Model.SortParameters.Count; i++)
+            {
+                var item = Model.SortParameters[i];
+        @:else if (sorting?.Contains("@item.JsonName") ?? false)
+        @:{
+        @:    yield return x => x!.@item.SortName;
+        @:}
+            }
+        @:else
+        @:{
+        @:    yield return x => x!.Id;
+        @:}
+        }
+        else
+        {
+        @:    yield return c => c!.Id;
+        }   
+    }
+}
