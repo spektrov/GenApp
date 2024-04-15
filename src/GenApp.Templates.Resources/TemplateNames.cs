@@ -53,4 +53,6 @@ public static class TemplateNames
     public const string EntitySpecificationById = nameof(EntitySpecificationById);
 
     public const string DalBootstrap = nameof(DalBootstrap);
+
+    public const string EntityRepository = nameof(EntityRepository);
 }

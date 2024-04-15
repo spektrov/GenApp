@@ -17,7 +17,7 @@ public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.
     {
         get
         {
-            return result => result.@Model.PropertyName != null && EF.Functions.ILike(result.@Model.PropertyName, $"%{_pattern}%");
+            return result => result.@Model.PropertyName != null && EF.Functions.Like(result.@Model.PropertyName, $"%{_pattern}%");
         }
     }
 }

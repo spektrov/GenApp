@@ -27,11 +27,11 @@ internal class BootstrapGenCommand(IFileGenService fileGenService) : IGenCommand
                 Namespace = $"{model.AppName}.DAL",
                 Usings = new[]
                 {
-                        "Microsoft.EntityFrameworkCore",
-                        "Microsoft.Extensions.Configuration",
-                        "Microsoft.Extensions.DependencyInjection",
-                        $"{model.AppName}.DAL.Interfaces",
-                        $"{model.AppName}.DAL.Repositories",
+                    "Microsoft.EntityFrameworkCore",
+                    "Microsoft.Extensions.Configuration",
+                    "Microsoft.Extensions.DependencyInjection",
+                    $"{model.AppName}.DAL.Interfaces",
+                    $"{model.AppName}.DAL.Repositories",
                 }.Order(),
             },
             token);

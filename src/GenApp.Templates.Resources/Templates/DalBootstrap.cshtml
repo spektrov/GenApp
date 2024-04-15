@@ -20,7 +20,7 @@ public static class Bootstrap
     {
     @foreach (var injection in Model.Injections)
     {
-        @:services.AddScoped<<@injection.InterfaceName, @injection.ClassName>();
+        @:services.AddScoped<@injection.InterfaceName, @injection.ClassName>();
     }
     }
 }

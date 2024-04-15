@@ -72,7 +72,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
                 new EntityFilterSpecificationModel
                 {
                     Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
-                    SpecificationName = $"Search{entity.EntityName}By{property.Name}",
+                    SpecificationName = $"Find{entity.EntityName}By{property.Name}",
                     EntityName = $"{entity.EntityName}Entity",
                     KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
                     PropertyName = property.Name,
@@ -124,7 +124,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
 
     private async Task GenerateByIdSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
     {
-        var property = entity.Properties.FirstOrDefault(x => x.IsId );
+        var property = entity.Properties.FirstOrDefault(x => x.IsId);
         if (property == null)
         {
             return;
@@ -135,7 +135,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
         await fileGenService.CreateEntryAsync(
             archive,
             file.ToDalProjectFile(appName),
-            new EntitySearchSpecificationModel
+            new EntitySpecificationByIdModel
             {
                 Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
                 SpecificationName = $"Find{entity.EntityName}ById",
@@ -144,8 +144,8 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
                 PropertyName = property.Name,
                 Usings = new List<string>
                 {
-                        "System.Linq.Expressions",
-                        $"{appName}.DAL.Entities",
+                    "System.Linq.Expressions",
+                    $"{appName}.DAL.Entities",
                 }.Order(),
             },
             token);

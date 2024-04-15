@@ -8,12 +8,12 @@ public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.
 {
     private readonly @(Model.KeyType)[] _ids;
 
-    public @Model.SpecificationName(@Model.KeyType id)
+    public @(Model.SpecificationName)(@Model.KeyType id)
     {
         _ids = new[] { id };
     }
 
-    public @Model.SpecificationName(int[] ids)
+    public @(Model.SpecificationName)(int[] ids)
     {
         _ids = ids;
     }
