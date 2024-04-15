@@ -51,4 +51,6 @@ public static class TemplateNames
     public const string EntityRangeSpecification = nameof(EntityRangeSpecification);
 
     public const string EntitySpecificationById = nameof(EntitySpecificationById);
+
+    public const string DalBootstrap = nameof(DalBootstrap);
 }

@@ -1,8 +1,7 @@
 ﻿namespace GenApp.Domain.Enums;
 public enum DbmsType
 {
-    NONE = 0,
-    MSSQLSERVER,
+    MSSQLSERVER = 1,
     POSTGRESQL,
     MYSQL,
 }
