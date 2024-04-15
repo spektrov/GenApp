@@ -1,0 +1,9 @@
+namespace @Model.Namespace;
+public class PagedResponse<T>
+{
+    public IEnumerable<T> Items { get; set; } = null!;
+
+    public int TotalPageCount { get; set; }
+
+    public int TotalCount { get; set; }
+}
