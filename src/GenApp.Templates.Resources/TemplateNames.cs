@@ -55,4 +55,18 @@ public static class TemplateNames
     public const string DalBootstrap = nameof(DalBootstrap);
 
     public const string EntityRepository = nameof(EntityRepository);
+
+    public const string NotFoundException = nameof(NotFoundException);
+
+    public const string PaginationParameters = nameof(PaginationParameters);
+
+    public const string QueryParameters = nameof(QueryParameters);
+
+    public const string PagedResponse = nameof(PagedResponse);
+
+    public const string CommandModel = nameof(CommandModel);
+
+    public const string DomainModel = nameof(DomainModel);
+
+    public const string BllAutoMapper = nameof(BllAutoMapper);
 }

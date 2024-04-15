@@ -1,0 +1,17 @@
+using System.Text.Json.Serialization;
+
+namespace @Model.Namespace;
+public class PaginationParameters
+{
+    /// <summary>
+    /// The offset from start to retrieve. Defaults to 0.
+    /// </summary>
+    [JsonPropertyName("offset")]
+    public int Offset { get; set; } = 0;
+
+    /// <summary>
+    /// The number of results to retrieve. Defaults to 10.
+    /// </summary>
+    [JsonPropertyName("take")]
+    public int Take { get; set; } = 10;
+}

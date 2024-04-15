@@ -1,0 +1,8 @@
+namespace @Model.Namespace;
+public class NotFoundException : Exception
+{
+    public NotFoundException(string entityName, string parametrValue)
+        : base($"Entity {entityName} not found for ID - {parametrValue}")
+    {
+    }
+}

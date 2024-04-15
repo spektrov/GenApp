@@ -1,0 +1,21 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class Mapper : Profile
+{
+    public Mapper()
+    {
+        @for (int i = 0; i < Model.Models.Count; i++)
+        {
+        @:CreateMap<@Model.Models[i].CommandModelName, @Model.Models[i].EntityName>();
+        @:CreateMap<@Model.Models[i].EntityName, @Model.Models[i].ModelName>();
+            if (i != Model.Models.Count - 1)
+            {
+        @:
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+using System.Text.Json.Serialization;
+
+namespace @Model.Namespace;
+
+/// <summary>
+/// Parameters for searching, filtering and sorting.
+/// </summary>
+public class QueryParameters : PaginationParameters
+{
+    /// <summary>
+    /// The field to sort the results by.
+    /// </summary>
+    [JsonPropertyName("sort")]
+    public string? Sort { get; set; }
+
+    /// <summary>
+    /// The filter to apply to the results. Passes as json.
+    /// </summary>
+    [JsonPropertyName("filter")]
+    public string? Filter { get; set; }
+
+    /// <summary>
+    /// The range filters to apply to the results. Passes as json.
+    /// </summary>
+    [JsonPropertyName("range")]
+    public string? Range { get; set; }
+
+    /// <summary>
+    /// Search term to apply to the results. Passes as json.
+    /// </summary>
+    [JsonPropertyName("search")]
+    public string? Search { get; set; }
+}
