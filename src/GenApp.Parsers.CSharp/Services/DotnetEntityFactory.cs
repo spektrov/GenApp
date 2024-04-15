@@ -26,6 +26,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
     private DotnetPropertyConfigurationModel MapToProperty(SqlColumnConfigurationModel column, DbmsType dbms)
     {
         // TODO: handle when not simple PK - should not create id property
+        // TODO: handle when FK - should create navigation and FK id property
         var property = new DotnetPropertyConfigurationModel
         {
             Name = GetPropertyName(column),

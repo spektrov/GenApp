@@ -66,5 +66,7 @@ public static class TemplateNames
 
     public const string CommandModel = nameof(CommandModel);
 
+    public const string DomainModel = nameof(DomainModel);
+
     public const string BllAutoMapper = nameof(BllAutoMapper);
 }
