@@ -3,11 +3,10 @@ using GenApp.Domain.Constants;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
-using GenApp.Parsers.Abstractions.Interfaces;
 using GenApp.Templates.Resources.Models;
 
 namespace GenApp.DomainServices.CommandHandlers.DAL;
-internal class SpecificationsGenCommand(IFileGenService fileGenService, ICaseTransformer caseTransformer) : IGenCommand
+internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCommand
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
@@ -15,7 +14,10 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService, ICaseTra
 
         foreach (var entity in model.Entities)
         {
-            // await GenerateSearchSpecifications(archive, entity, model.AppName, token);
+            await GenerateSearchSpecifications(archive, entity, model.AppName, token);
+            await GenerateFilterSpecifications(archive, entity, model.AppName, token);
+            await GenerateRangeSpecifications(archive, entity, model.AppName, token);
+            await GenerateByIdSpecifications(archive, entity, model.AppName, token);
         }
     }
 
@@ -38,12 +40,115 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService, ICaseTra
                 {
                     Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
                     SpecificationName = $"Search{entity.EntityName}By{property.Name}",
-                    EntityName = entity.EntityName,
+                    EntityName = $"{entity.EntityName}Entity",
                     KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
                     PropertyName = property.Name,
+                    Usings = new List<string>
+                    {
+                        "System.Linq.Expressions",
+                        "Microsoft.EntityFrameworkCore",
+                        $"{appName}.DAL.Entities",
+                    }.Order(),
                 },
                 token);
         }
+    }
+
+    private async Task GenerateFilterSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
+    {
+        var filterProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Filter.Contains(x.Type));
+        if (!filterProperties.Any())
+        {
+            return;
+        }
+
+        foreach (var property in filterProperties)
+        {
+            var file = $"Specifications/{entity.EntityName}Specifications/Find{entity.EntityName}By{property.Name}.cs";
+
+            await fileGenService.CreateEntryAsync(
+                archive,
+                file.ToDalProjectFile(appName),
+                new EntityFilterSpecificationModel
+                {
+                    Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
+                    SpecificationName = $"Search{entity.EntityName}By{property.Name}",
+                    EntityName = $"{entity.EntityName}Entity",
+                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    PropertyName = property.Name,
+                    PropertyType = property.Type,
+                    Usings = new List<string>
+                    {
+                        "System.Linq.Expressions",
+                        $"{appName}.DAL.Entities",
+                    }.Order(),
+                },
+                token);
+        }
+    }
+
+    private async Task GenerateRangeSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
+    {
+        var rangeProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Range.Contains(x.Type));
+        if (!rangeProperties.Any())
+        {
+            return;
+        }
+
+        foreach (var property in rangeProperties)
+        {
+            var file = $"Specifications/{entity.EntityName}Specifications/Range{entity.EntityName}By{property.Name}.cs";
+
+            await fileGenService.CreateEntryAsync(
+                archive,
+                file.ToDalProjectFile(appName),
+                new EntityRangeSpecificationModel
+                {
+                    Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
+                    SpecificationName = $"Range{entity.EntityName}By{property.Name}",
+                    EntityName = $"{entity.EntityName}Entity",
+                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    PropertyName = property.Name,
+                    PropertyType = property.Type,
+                    IsNullable = !property.NotNull,
+                    Usings = new List<string>
+                    {
+                        "System.Linq.Expressions",
+                        $"{appName}.DAL.Entities",
+                        $"{appName}.DAL.Models",
+                    }.Order(),
+                },
+                token);
+        }
+    }
+
+    private async Task GenerateByIdSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
+    {
+        var property = entity.Properties.FirstOrDefault(x => x.IsId );
+        if (property == null)
+        {
+            return;
+        }
+
+        var file = $"Specifications/{entity.EntityName}Specifications/Find{entity.EntityName}ById.cs";
+
+        await fileGenService.CreateEntryAsync(
+            archive,
+            file.ToDalProjectFile(appName),
+            new EntitySearchSpecificationModel
+            {
+                Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
+                SpecificationName = $"Find{entity.EntityName}ById",
+                EntityName = $"{entity.EntityName}Entity",
+                KeyType = property.Type,
+                PropertyName = property.Name,
+                Usings = new List<string>
+                {
+                        "System.Linq.Expressions",
+                        $"{appName}.DAL.Entities",
+                }.Order(),
+            },
+            token);
     }
 
     private async Task GenerateStaticModels(ZipArchive archive, ApplicationDataModel model, CancellationToken token)

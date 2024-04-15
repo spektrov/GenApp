@@ -1,0 +1,59 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.KeyType>
+{
+    private readonly RangeParameters<@Model.PropertyType> _range;
+
+    public @(Model.SpecificationName)(RangeParameters<@Model.PropertyType> range)
+    {
+        _range = range;
+    }
+
+    public override Expression<Func<@Model.EntityName, bool>> Expression
+    {
+        get
+        {
+            if (_range.Min.HasValue && _range.Max.HasValue)
+            {
+                @if (Model.IsNullable)
+                {
+                @:return result => result.@Model.PropertyName.HasValue && result.@Model.PropertyName >= _range.Min && _range.Max >= result.@Model.PropertyName;
+                }
+                else
+                {
+                @:return result => result.@Model.PropertyName >= _range.Min && _range.Max >= result.@Model.PropertyName;
+                }
+            }
+
+            if (_range.Min.HasValue)
+            {
+                @if (Model.IsNullable)
+                {
+                @:return result => result.@Model.PropertyName.HasValue && result.@Model.PropertyName >= _range.Min;
+                }
+                else
+                {
+                @:return result => result.@Model.PropertyName >= _range.Min;
+                }     
+            }
+
+            if (_range.Max.HasValue)
+            {
+                @if (Model.IsNullable)
+                {
+                @:return result => result.@Model.PropertyName.HasValue && _range.Max >= result.@Model.PropertyName;
+                }
+                else
+                {
+                @:return result => _range.Max >= result.@Model.PropertyName;
+                }
+            }
+
+            return _ => true;
+        }
+    }
+}

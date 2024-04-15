@@ -46,7 +46,9 @@ public static class TemplateNames
 
     public const string EntitySearchSpecification = nameof(EntitySearchSpecification);
 
-    public const string EntityFilterpecification = nameof(EntityFilterpecification);
+    public const string EntityFilterSpecification = nameof(EntityFilterSpecification);
 
     public const string EntityRangeSpecification = nameof(EntityRangeSpecification);
+
+    public const string EntitySpecificationById = nameof(EntitySpecificationById);
 }

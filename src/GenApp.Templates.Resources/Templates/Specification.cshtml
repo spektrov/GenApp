@@ -20,8 +20,4 @@ public abstract class Specification<T, TId>
     }
 
     public static Specification<T, TId> operator &(Specification<T, TId> spec1, Specification<T, TId> spec2) => new AndSpecification<T, TId>(spec1, spec2);
-
-    public static Specification<T, TId> operator |(Specification<T, TId> spec1, Specification<T, TId> spec2) => new OrSpecification<T, TId>(spec1, spec2);
-
-    public static Specification<T, TId> operator !(Specification<T, TId> spec1) => new NotSpecification<T, TId>(spec1);
 }

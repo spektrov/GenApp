@@ -1,0 +1,28 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.KeyType>
+{
+    private readonly @(Model.KeyType)[] _ids;
+
+    public @Model.SpecificationName(@Model.KeyType id)
+    {
+        _ids = new[] { id };
+    }
+
+    public @Model.SpecificationName(int[] ids)
+    {
+        _ids = ids;
+    }
+
+    public override Expression<Func<@Model.EntityName, bool>> Expression
+    {
+        get
+        {
+            return result => _ids.Contains(result.@Model.PropertyName);
+        }
+    }
+}
