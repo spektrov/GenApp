@@ -1,0 +1,23 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.KeyType>
+{
+    private readonly string _pattern;
+
+    public @(Model.SpecificationName)(string pattern)
+    {
+        _pattern = pattern;
+    }
+
+    public override Expression<Func<@Model.EntityName, bool>> Expression
+    {
+        get
+        {
+            return result => result.@Model.PropertyName != null && EF.Functions.ILike(result.@Model.PropertyName, $"%{_pattern}%");
+        }
+    }
+}

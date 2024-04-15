@@ -1,0 +1,20 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class AndSpecification<T, TId> : Specification<T, TId>
+    where T : IBaseEntity<TId>
+{
+    private readonly Specification<T, TId> _spec1;
+    private readonly Specification<T, TId> _spec2;
+
+    public AndSpecification(Specification<T, TId> spec1, Specification<T, TId> spec2)
+    {
+        _spec1 = spec1;
+        _spec2 = spec2;
+    }
+
+    public override Expression<Func<T, bool>> Expression => _spec1.Expression.And(_spec2.Expression);
+}

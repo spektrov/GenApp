@@ -17,8 +17,8 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
         {
             var fileName = $"Entities/{entity.EntityName}Entity.cs";
             var properties = entity.Properties.OrderByDescending(x => x.IsId).ThenBy(x => x.IsNavigation);
-            var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties);
-            propertyDtos = propertyDtos.Select(AdjustProperty);
+            var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties)
+                .Select(AdjustProperty).ToList();
 
             await fileGenService.CreateEntryAsync(
                 archive,

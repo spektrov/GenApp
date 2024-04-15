@@ -1,0 +1,11 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class TrueSpecification<T, TId> : Specification<T, TId>
+    where T : IBaseEntity<TId>
+{
+    public override Expression<Func<T, bool>> Expression => True();
+}
