@@ -65,4 +65,6 @@ public static class TemplateNames
     public const string PagedResponse = nameof(PagedResponse);
 
     public const string CommandModel = nameof(CommandModel);
+
+    public const string BllAutoMapper = nameof(BllAutoMapper);
 }
