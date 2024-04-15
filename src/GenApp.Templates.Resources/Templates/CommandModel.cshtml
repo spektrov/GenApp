@@ -1,0 +1,17 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class @Model.ModelName
+{
+    @for (int i = 0; i < Model.Properties.Count; i++)
+    {
+    @:public @Model.Properties[i].Type@Model.Properties[i].Nullable @Model.Properties[i].Name { get; set; }
+        if (i != Model.Properties.Count - 1)
+        {
+    @:
+        }
+    }
+}

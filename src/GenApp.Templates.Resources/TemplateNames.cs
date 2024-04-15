@@ -63,4 +63,6 @@ public static class TemplateNames
     public const string QueryParameters = nameof(QueryParameters);
 
     public const string PagedResponse = nameof(PagedResponse);
+
+    public const string CommandModel = nameof(CommandModel);
 }
