@@ -71,4 +71,6 @@ public static class TemplateNames
     public const string BllAutoMapper = nameof(BllAutoMapper);
 
     public const string ServiceInterface = nameof(ServiceInterface);
+
+    public const string BllBootstrap = nameof(BllBootstrap);
 }
