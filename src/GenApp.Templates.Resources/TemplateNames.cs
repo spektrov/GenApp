@@ -69,4 +69,6 @@ public static class TemplateNames
     public const string DomainModel = nameof(DomainModel);
 
     public const string BllAutoMapper = nameof(BllAutoMapper);
+
+    public const string ServiceInterface = nameof(ServiceInterface);
 }
