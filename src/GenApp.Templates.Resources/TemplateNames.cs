@@ -85,4 +85,6 @@ public static class TemplateNames
     public const string ApiBootstrap = nameof(ApiBootstrap);
 
     public const string Program = nameof(Program);
+
+    public const string Controller = nameof(Controller);
 }

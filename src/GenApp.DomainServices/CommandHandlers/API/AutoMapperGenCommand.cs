@@ -27,7 +27,8 @@ internal class AutoMapperGenCommand(IFileGenService fileGenService) : IGenComman
             $"{model.AppName}.BLL.DomainModels",
         };
 
-        usings.AddRange(model.Entities.Select(x => $"{model.AppName}.API.Models.Requests.{x.EntityName}"));
+        usings.AddRange(model.Entities.Select(x =>
+            $"{model.AppName}.API.Models.Requests.{x.EntityName}Requests"));
 
         await fileGenService.CreateEntryAsync(
             archive,
