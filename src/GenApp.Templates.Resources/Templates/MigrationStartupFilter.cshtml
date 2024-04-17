@@ -1,0 +1,43 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class MigrationStartupFilter<TContext> : IStartupFilter
+    where TContext : DbContext
+{
+    private readonly ICustomDbMigrator _dbMigrator;
+
+    public MigrationStartupFilter(ICustomDbMigrator dbMigrator)
+    {
+        _dbMigrator = dbMigrator;
+    }
+
+    public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
+    {
+        return app =>
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                foreach (var context in scope.ServiceProvider.GetServices<TContext>())
+                {
+                    if (context.Database.IsRelational())
+                    {
+                        try
+                        {
+                            // context.Database.Migrate();
+                            Task.WaitAll(_dbMigrator.MigrateAsync(context, CancellationToken.None));
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                    }
+                }
+            }
+
+            next(app);
+        };
+    }
+}

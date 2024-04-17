@@ -7,6 +7,8 @@ public class DotnetPropertyDto
 
     public string Nullable { get; set; }
 
+    public string IsRequired { get; set; }
+
     public bool IsNavigation { get; set; }
 
     public bool IsCollectionNavigation { get; set; }

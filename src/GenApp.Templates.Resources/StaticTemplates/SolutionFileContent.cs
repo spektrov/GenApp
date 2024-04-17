@@ -12,7 +12,7 @@ Project(""{{PROJECT-GUID}}"") = ""{APP-NAMESPACE}.BLL"", ""src\{APP-NAMESPACE}.B
 EndProject
 Project(""{{PROJECT-GUID}}"") = ""{APP-NAMESPACE}.DAL"", ""src\{APP-NAMESPACE}.DAL\{APP-NAMESPACE}.DAL.csproj"", ""{{DAL-PROJECT-GUID}}""
 EndProject
-Project(""{{PROJECT-GUID}}"") = ""{APP-NAMESPACE}.API"", ""src\TemplateSolution.API\{APP-NAMESPACE}.API.csproj"", ""{API-PROJECT-GUID}""
+Project(""{{PROJECT-GUID}}"") = ""{APP-NAMESPACE}.API"", ""src\{APP-NAMESPACE}.API\{APP-NAMESPACE}.API.csproj"", ""{API-PROJECT-GUID}""
 EndProject
 Project(""{2150E333-8FDC-42A3-9474-1A3956D46DE8}"") = ""SolutionItems"", ""SolutionItems"", ""{A9BB38AD-B0A7-4547-87E7-3745DFD4433C}""
 	ProjectSection(SolutionItems) = preProject
