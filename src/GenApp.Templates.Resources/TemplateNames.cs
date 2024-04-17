@@ -81,4 +81,6 @@ public static class TemplateNames
     public const string MigrationStartupFilter = nameof(MigrationStartupFilter);
 
     public const string ApiAutoMapper = nameof(ApiAutoMapper);
+
+    public const string ApiBootstrap = nameof(ApiBootstrap);
 }
