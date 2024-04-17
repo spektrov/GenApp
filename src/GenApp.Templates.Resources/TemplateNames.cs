@@ -75,4 +75,6 @@ public static class TemplateNames
     public const string Service = nameof(Service);
 
     public const string BllBootstrap = nameof(BllBootstrap);
+
+    public const string ExceptionMiddlewareExtension = nameof(ExceptionMiddlewareExtension);
 }

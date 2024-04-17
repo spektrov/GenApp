@@ -1,0 +1,43 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public static class ExceptionMiddlewareExtension
+{
+    public static void UseErrorHandling(this IApplicationBuilder app)
+    {
+        app.UseExceptionHandler(appError =>
+        {
+            appError.Run(async context =>
+            {
+                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                if (contextFeature != null)
+                {
+                    var logger = app.ApplicationServices.GetRequiredService<ILogger<Program>>();
+                    var exceptionType = contextFeature.Error.GetType();
+
+                    string message = "Internal Server Error";
+                    var level = LogLevel.None;
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    context.Response.ContentType = MediaTypeNames.Application.Json;
+
+                    switch (exceptionType)
+                    {
+                        case var type when type == typeof(NotFoundException):
+                            context.Response.StatusCode = StatusCodes.Status404NotFound;
+                            message = contextFeature.Error.Message;
+                            level = LogLevel.Information;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    logger.Log(level, "Something went wrong: {ContextFeatureError}", contextFeature.Error);
+                    await context.Response.WriteAsJsonAsync(new { context.Response.StatusCode, Message = message });
+                }
+            });
+        });
+    }
+}
