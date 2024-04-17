@@ -79,4 +79,6 @@ public static class TemplateNames
     public const string ExceptionMiddlewareExtension = nameof(ExceptionMiddlewareExtension);
 
     public const string MigrationStartupFilter = nameof(MigrationStartupFilter);
+
+    public const string ApiAutoMapper = nameof(ApiAutoMapper);
 }
