@@ -77,4 +77,6 @@ public static class TemplateNames
     public const string BllBootstrap = nameof(BllBootstrap);
 
     public const string ExceptionMiddlewareExtension = nameof(ExceptionMiddlewareExtension);
+
+    public const string MigrationStartupFilter = nameof(MigrationStartupFilter);
 }
