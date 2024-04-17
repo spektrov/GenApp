@@ -72,5 +72,7 @@ public static class TemplateNames
 
     public const string ServiceInterface = nameof(ServiceInterface);
 
+    public const string Service = nameof(Service);
+
     public const string BllBootstrap = nameof(BllBootstrap);
 }

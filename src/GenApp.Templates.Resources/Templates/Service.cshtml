@@ -1,0 +1,106 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class @Model.ServiceName : @Model.InterfaceName
+{
+    private readonly IMapper _mapper;
+    private readonly ILogger<@Model.ServiceName> _logger;
+    private readonly @Model.RepositoryInterfaceName _repository;
+
+    public @(Model.ServiceName)(IMapper mapper, @Model.RepositoryInterfaceName repository, ILogger<@Model.ServiceName> logger)
+    {
+        _mapper = mapper;
+        _repository = repository;
+        _logger = logger;
+    }
+
+    public async Task<PagedResponse<@Model.ModelName>> GetManyAsync(QueryParameters parameters, CancellationToken token)
+    {
+        var specification = _repository.BuildSpecification(
+            new FilterParameters { Filter = parameters.Filter, Search = parameters.Search, Range = parameters.Range });
+
+        var count = await _repository.CountAsync(specification, token);
+
+        var entities = await _repository.GetManyAsync(
+            specification,
+            token,
+            @if(Model.GetManyIncludes != null && Model.GetManyIncludes.Count > 0)
+            {
+            @:includedProperties: new[]
+            @:{
+                foreach(var property in Model.GetManyIncludes)
+                {
+            @:      $"{nameof(@property)}",
+                }
+            @:},
+            }
+            skip: parameters.Offset,
+            take: parameters.Take,
+            sortingExpressions: _repository.BuildSortingExpression(parameters.Sort),
+            sortingOrder: SortingOrderCalculator.Calculate(parameters.Sort));
+
+        var models = _mapper.Map<IEnumerable<@Model.ModelName>>(entities);
+
+        return new PagedResponse<@Model.ModelName>
+        {
+            Items = models,
+            TotalCount = count,
+            TotalPageCount = PageCountCalculator.Calculate(count, parameters.Take),
+        };
+    }
+
+    public async Task<@Model.ModelName> GetByIdAsync(@Model.KeyType id, CancellationToken token)
+    {
+        var entity = await _repository.FirstOrDefaultAsync(
+            new @(Model.FindByIdSpecification)(id),
+            @if(Model.GetByIdIncludes == null || Model.GetByIdIncludes.Count == 0)
+            {
+            @:token);
+            }
+            else
+            {
+            @:token,
+            @:includedProperties: new[]
+            @:{
+                foreach(var property in Model.GetByIdIncludes)
+                {
+            @:      $"{nameof(@property)}",
+                }
+            @:});
+            }
+        if (entity == null)
+        {
+            throw new NotFoundException(nameof(@Model.EntityName), id.ToString());
+        }
+
+        return _mapper.Map<@Model.ModelName>(entity);
+    }
+
+    public Task CreateAsync(@Model.CommandModelName model, CancellationToken token)
+    {
+        var entity = _mapper.Map<@Model.EntityName>(model);
+        return _repository.AddAsync(entity, token);
+    }
+
+    public Task UpdateAsync(@Model.CommandModelName model, CancellationToken token)
+    {
+        return _repository.UpdateAsync(
+            new @(Model.FindByIdSpecification)(model.Id),
+            entity =>
+            {
+                @foreach(var property in Model.PropertiesForUpdate)
+                {
+                @:entity.@property = model.@property;
+                }
+            },
+            token);
+    }
+
+    public Task DeleteAsync(@Model.KeyType id, CancellationToken token)
+    {
+        return _repository.DeleteAsync(new @(Model.FindByIdSpecification)(id), token);
+    }
+}
