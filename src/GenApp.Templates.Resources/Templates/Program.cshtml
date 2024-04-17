@@ -1,0 +1,29 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDataLayer(builder.Configuration);
+builder.Services.AddBusinessLayer();
+builder.Services.AddApiLayer();
+
+builder.Logging.AddConsole();
+
+@if (Model.EnableDocker)
+{
+@:builder.WebHost.UseUrls("http://*:80");
+}
+
+var app = builder.Build();
+
+app.UseErrorHandling();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseHttpsRedirection();
+app.MapControllers();
+
+app.Run();

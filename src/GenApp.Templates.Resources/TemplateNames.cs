@@ -83,4 +83,6 @@ public static class TemplateNames
     public const string ApiAutoMapper = nameof(ApiAutoMapper);
 
     public const string ApiBootstrap = nameof(ApiBootstrap);
+
+    public const string Program = nameof(Program);
 }
