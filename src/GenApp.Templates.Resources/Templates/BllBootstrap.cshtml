@@ -1,0 +1,22 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public static class Bootstrap
+{
+    public static void AddBusinessLayer(this IServiceCollection services)
+    {
+        services.AddServices();
+        services.AddAutoMapper(typeof(Bootstrap).Assembly);
+    }
+
+    private static void AddServices(this IServiceCollection services)
+    {
+    @foreach (var injection in Model.Injections)
+    {
+        @:services.AddScoped<@injection.InterfaceName, @injection.ClassName>();
+    }
+    }
+}
