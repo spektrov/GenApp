@@ -1,0 +1,33 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public static class Bootstrap
+{
+    public static void AddApiLayer(this IServiceCollection services)
+    {
+        // Could be replaced with build-in Entity Framework migrations.
+        services.AddTransient<ICustomDbMigrator, CustomDbMigrator>();
+        services.AddTransient<IStartupFilter, MigrationStartupFilter<DatabaseContext>>();
+
+        services.AddAutoMapper(typeof(Bootstrap).Assembly);
+
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+
+        services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+                options.JsonSerializerOptions.Converters.Add(new ObjectToInferredTypesConverter());
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
+    }
+}

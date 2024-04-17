@@ -18,7 +18,8 @@ public class ApplicationDataModelMapper(
             AppName = caseTransformer.ToPascalCase(settingsModel.AppName),
             DbmsType = settingsModel.DbmsType,
             SqlTableScript = settingsModel.SqlTableScript,
-            DotnetSdkVersion = BuildNetSdkVersion(settingsModel.DotnetSdkVersion)
+            DotnetSdkVersion = BuildNetSdkVersion(settingsModel.DotnetSdkVersion),
+            UseDocker = settingsModel.UseDocker,
         };
 
         var sqlTableConfigs = sqlTableParser.BuildTablesConfiguration(settingsModel.SqlTableScript);
