@@ -27,7 +27,7 @@ public class @Model.ConfigurationName : IEntityTypeConfiguration<@Model.EntityNa
 
         @foreach (var columnConfig in @Model.ColumnConfigs)
         {
-        @:builder.Property(e => e.@Model.PropertyName).HasColumnName(@columnConfig.ConfigName);
+        @:builder.Property(e => e.@columnConfig.PropertyName).HasColumnName(@columnConfig.ConfigName);
         }
     }
 }

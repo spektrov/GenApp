@@ -15,6 +15,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         var entities = tables.Select(table => new DotnetEntityConfigurationModel
         {
             EntityName = ToDotnetName(table.TableName),
+            Table = GetTableInfo(table),
             Properties = table.Columns.Select(column => MapToProperty(column, dbms)).ToList(),
         }).ToList();
 
@@ -35,6 +36,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
             IsId = column.IsPrimaryKey,
             IsNavigation = column.IsForeignKey,
             Relation = relationMapper.Map(column.Relation),
+            ColumnName = column.ColumnName,
         };
 
         return property;
@@ -91,6 +93,24 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
                 }
             }
         }
+    }
+
+    private SqlTableInfoModel GetTableInfo(SqlTableConfigurationModel table)
+    {
+        var tableInfo = new SqlTableInfoModel
+        {
+            Name = table.TableName,
+        };
+
+        var primaryKeyCount = table.Columns.Count(x => x.IsPrimaryKey);
+        if (primaryKeyCount == 1)
+        {
+            var primaryKey = table.Columns.First(x => x.IsPrimaryKey);
+            tableInfo.KeyName = primaryKey.ColumnName;
+            tableInfo.KeyType = primaryKey.ColumnType;
+        }
+
+        return tableInfo;
     }
 
     private string ToDotnetName(string tableName)
