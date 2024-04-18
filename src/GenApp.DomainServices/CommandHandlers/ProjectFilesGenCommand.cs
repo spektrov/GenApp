@@ -21,7 +21,7 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
             new ProjectFileModel
             {
                 Type = dllType,
-                SdkVersion = model.DotnetSdkVersion,
+                SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
                 Packages = new List<PackageDto>
                 {
                     new() { Name = "Microsoft.EntityFrameworkCore.Relational", Version = "6.0.27" },
@@ -36,7 +36,7 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
             new ProjectFileModel
             {
                 Type = dllType,
-                SdkVersion = model.DotnetSdkVersion,
+                SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
                 Packages = new List<PackageDto>
                 {
                     new() { Name = "AutoMapper", Version = "13.0.1" },
@@ -54,7 +54,7 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
 	        new ProjectFileModel
 	        {
 		        Type = webType,
-		        SdkVersion = model.DotnetSdkVersion,
+		        SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
 		        Packages = new List<PackageDto>
 		        {
 					 new() { Name = "Swashbuckle.AspNetCore", Version = "6.5.0" },
@@ -78,4 +78,9 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
 			_ => throw new ArgumentException("Dbms type is not defined"),
 		};
 	}
+
+    private string BuildNetSdkVersion(int version)
+    {
+        return $"net{version}.0";
+    }
 }

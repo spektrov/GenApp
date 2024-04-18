@@ -18,7 +18,7 @@ public class ApplicationDataModelMapper(
             AppName = caseTransformer.ToPascalCase(settingsModel.AppName),
             DbmsType = settingsModel.DbmsType,
             SqlTableScript = settingsModel.SqlTableScript,
-            DotnetSdkVersion = BuildNetSdkVersion(settingsModel.DotnetSdkVersion),
+            DotnetSdkVersion = settingsModel.DotnetSdkVersion,
             UseDocker = settingsModel.UseDocker,
         };
 
@@ -30,10 +30,5 @@ public class ApplicationDataModelMapper(
         applicationData.Entities = entities.Value;
 
         return applicationData;
-    }
-
-    private string BuildNetSdkVersion(string version)
-    {
-        return $"net{version}.0";
     }
 }

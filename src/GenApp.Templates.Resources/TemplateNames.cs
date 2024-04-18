@@ -87,4 +87,6 @@ public static class TemplateNames
     public const string Program = nameof(Program);
 
     public const string Controller = nameof(Controller);
+
+    public const string Dockerfile = nameof(Dockerfile);
 }
