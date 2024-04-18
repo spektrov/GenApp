@@ -1,0 +1,33 @@
+@foreach (var usg in Model.Usings)
+{
+@:using @usg;
+}
+
+namespace @Model.Namespace;
+public class @Model.ConfigurationName : IEntityTypeConfiguration<@Model.EntityName>
+{
+    private const string TableName = "@Model.TableName";
+    @if(@Model.HasPK)
+    {
+    @:private const string IdColumn = "@Model.IdColumnName";
+    }
+    @foreach (var columnConfig in @Model.ColumnConfigs)
+    {
+    @:private const string @columnConfig.ConfigName = "@columnConfig.ColumnName";
+    }
+
+    public void Configure(EntityTypeBuilder<@Model.EntityName> builder)
+    {
+        builder.ToTable(TableName);
+
+        @if (@Model.HasPK)
+        {
+        @:builder.Property(e => e.Id).HasColumnName(IdColumn).Metadata.IsPrimaryKey();
+        }
+
+        @foreach (var columnConfig in @Model.ColumnConfigs)
+        {
+        @:builder.Property(e => e.@Model.PropertyName).HasColumnName(@columnConfig.ConfigName);
+        }
+    }
+}
