@@ -13,14 +13,8 @@ public class ApplicationDataModelMapper(
 {
     public Result<ApplicationDataModel> Map(ApplicationDataModel settingsModel)
     {
-        var applicationData = new ApplicationDataModel
-        {
-            AppName = caseTransformer.ToPascalCase(settingsModel.AppName),
-            DbmsType = settingsModel.DbmsType,
-            SqlTableScript = settingsModel.SqlTableScript,
-            DotnetSdkVersion = BuildNetSdkVersion(settingsModel.DotnetSdkVersion),
-            UseDocker = settingsModel.UseDocker,
-        };
+        var applicationData = settingsModel;
+        applicationData.AppName = caseTransformer.ToPascalCase(settingsModel.AppName);
 
         var sqlTableConfigs = sqlTableParser.BuildTablesConfiguration(settingsModel.SqlTableScript);
         if (sqlTableConfigs.IsFailed) return sqlTableConfigs.ToResult();
@@ -30,10 +24,5 @@ public class ApplicationDataModelMapper(
         applicationData.Entities = entities.Value;
 
         return applicationData;
-    }
-
-    private string BuildNetSdkVersion(string version)
-    {
-        return $"net{version}.0";
     }
 }

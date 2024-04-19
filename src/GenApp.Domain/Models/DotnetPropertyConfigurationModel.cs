@@ -11,5 +11,7 @@ public class DotnetPropertyConfigurationModel
 
     public bool IsNavigation { get; set; }
 
+    public string ColumnName { get; set; }
+
     public DotnetEntityRelationModel? Relation { get; set; }
 }

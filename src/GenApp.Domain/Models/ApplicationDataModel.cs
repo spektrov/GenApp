@@ -9,7 +9,7 @@ public class ApplicationDataModel
 
     public string AppName { get; set; }
 
-    public string DotnetSdkVersion { get; set; }
+    public int DotnetSdkVersion { get; set; }
 
     public bool UseDocker { get; set; }
 

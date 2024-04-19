@@ -52,9 +52,11 @@ public static class TemplateNames
 
     public const string EntitySpecificationById = nameof(EntitySpecificationById);
 
-    public const string DalBootstrap = nameof(DalBootstrap);
-
     public const string EntityRepository = nameof(EntityRepository);
+
+    public const string EntityConfiguration = nameof(EntityConfiguration);
+
+    public const string DalBootstrap = nameof(DalBootstrap);
 
     public const string NotFoundException = nameof(NotFoundException);
 
@@ -87,4 +89,8 @@ public static class TemplateNames
     public const string Program = nameof(Program);
 
     public const string Controller = nameof(Controller);
+
+    public const string Dockerfile = nameof(Dockerfile);
+
+    public const string Appsettings = nameof(Appsettings);
 }
