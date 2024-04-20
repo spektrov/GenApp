@@ -21,7 +21,7 @@ public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.
             {
                 @if (Model.IsNullable)
                 {
-                @:return result => result.@Model.PropertyName.HasValue && result.@Model.PropertyName >= _range.Min && _range.Max >= result.@Model.PropertyName;
+                @:return result => result.@(Model.PropertyName).HasValue && result.@Model.PropertyName >= _range.Min && _range.Max >= result.@Model.PropertyName;
                 }
                 else
                 {
@@ -33,7 +33,7 @@ public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.
             {
                 @if (Model.IsNullable)
                 {
-                @:return result => result.@Model.PropertyName.HasValue && result.@Model.PropertyName >= _range.Min;
+                @:return result => result.@(Model.PropertyName).HasValue && result.@Model.PropertyName >= _range.Min;
                 }
                 else
                 {
@@ -45,7 +45,7 @@ public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.
             {
                 @if (Model.IsNullable)
                 {
-                @:return result => result.@Model.PropertyName.HasValue && _range.Max >= result.@Model.PropertyName;
+                @:return result => result.@(Model.PropertyName).HasValue && _range.Max >= result.@Model.PropertyName;
                 }
                 else
                 {

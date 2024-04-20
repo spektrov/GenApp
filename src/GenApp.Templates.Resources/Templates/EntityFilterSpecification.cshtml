@@ -17,7 +17,14 @@ public class @Model.SpecificationName : Specification<@Model.EntityName, @Model.
     {
         get
         {
-            return result => _items.Contains(result.@Model.PropertyName);
+            @if (Model.IsNullable)
+            {
+            @:return result => result.@Model.PropertyName != null && _items.Contains(result.@(Model.PropertyName).Value);
+            }
+            else
+            {
+            @:return result => _items.Contains(result.@Model.PropertyName);
+            }
         }
     }
 }

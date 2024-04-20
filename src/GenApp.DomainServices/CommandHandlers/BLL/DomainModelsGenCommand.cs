@@ -14,9 +14,13 @@ internal class DomainModelsGenCommand(IFileGenService fileGenService, IMapper ma
     {
         foreach (var entity in model.Entities)
         {
-            var properties = entity.Properties.OrderByDescending(x => x.IsId).ThenBy(x => x.IsNavigation);
+            var properties = entity.Properties
+                .Where(x => !x.IsForeignRelation)
+                .OrderByDescending(x => x.IsId)
+                .ThenBy(x => x.IsNavigation);
             var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties)
-                .Select(AdjustProperty).ToList();
+                .Select(AdjustProperty)
+                .ToList();
 
             await fileGenService.CreateEntryAsync(
                 archive,

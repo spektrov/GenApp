@@ -47,7 +47,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
             var navigationPropety = new DotnetPropertyConfigurationModel
             {
                 Name = ToDotnetName(column.Relation!.TargetTable),
-                Type = column.Relation.TargetTable,
+                Type = ToDotnetName(column.Relation!.TargetTable),
                 NotNull = column.NotNull,
                 IsNavigation = true,
                 Relation = relationMapper.Map(column.Relation),
