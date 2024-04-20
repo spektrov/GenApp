@@ -6,6 +6,10 @@
 # Logs
 logs/
 
+# Angular
+.angular/
+node_modules/
+
 # User-specific files
 *.rsuser
 *.suo
