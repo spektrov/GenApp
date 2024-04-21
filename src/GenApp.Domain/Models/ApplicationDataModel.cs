@@ -13,5 +13,7 @@ public class ApplicationDataModel
 
     public bool UseDocker { get; set; }
 
+    public string? ConnectionString { get; set; }
+
     public IEnumerable<DotnetEntityConfigurationModel> Entities { get; set; }
 }
