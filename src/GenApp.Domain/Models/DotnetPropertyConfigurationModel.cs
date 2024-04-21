@@ -9,6 +9,8 @@ public class DotnetPropertyConfigurationModel
 
     public bool IsId { get; set; }
 
+    public bool IsForeignRelation { get; set; }
+
     public bool IsNavigation { get; set; }
 
     public string ColumnName { get; set; }

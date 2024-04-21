@@ -77,6 +77,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
                     KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
                     PropertyName = property.Name,
                     PropertyType = property.Type,
+                    IsNullable = !property.NotNull && property.Type != DotnetTypes.String,
                     Usings = new List<string>
                     {
                         "System.Linq.Expressions",
@@ -89,7 +90,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
 
     private async Task GenerateRangeSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
     {
-        var rangeProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Range.Contains(x.Type));
+        var rangeProperties = entity.Properties.Where(x => !x.IsId && !x.IsForeignRelation && DotnetFilterTypes.Range.Contains(x.Type));
         if (!rangeProperties.Any())
         {
             return;

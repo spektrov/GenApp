@@ -16,30 +16,47 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         {
             EntityName = ToDotnetName(table.TableName),
             Table = GetTableInfo(table),
-            Properties = table.Columns.Select(column => MapToProperty(column, dbms)).ToList(),
+            Properties = table.Columns.SelectMany(column => MapToProperty(column, dbms)).ToList(),
         }).ToList();
 
-        AddNavigationCollections(entities);
+        AddRevertedNavigationProperties(entities);
 
         return Result.Ok(entities.AsEnumerable());
     }
 
-    private DotnetPropertyConfigurationModel MapToProperty(SqlColumnConfigurationModel column, DbmsType dbms)
+    private IEnumerable<DotnetPropertyConfigurationModel> MapToProperty(SqlColumnConfigurationModel column, DbmsType dbms)
     {
         // TODO: handle when not simple PK - should not create id property
         // TODO: handle when FK - should create navigation and FK id property
+        var properties = new List<DotnetPropertyConfigurationModel>();
+
         var property = new DotnetPropertyConfigurationModel
         {
             Name = GetPropertyName(column),
             Type = GetPropertyType(column, dbms),
             NotNull = column.NotNull,
             IsId = column.IsPrimaryKey,
-            IsNavigation = column.IsForeignKey,
-            Relation = relationMapper.Map(column.Relation),
+            IsForeignRelation = column.IsForeignKey,
             ColumnName = column.ColumnName,
         };
 
-        return property;
+        properties.Add(property);
+
+        if (column.IsForeignKey && column.Relation is not null)
+        {
+            var navigationPropety = new DotnetPropertyConfigurationModel
+            {
+                Name = ToDotnetName(column.Relation!.TargetTable),
+                Type = ToDotnetName(column.Relation!.TargetTable),
+                NotNull = column.NotNull,
+                IsNavigation = true,
+                Relation = relationMapper.Map(column.Relation),
+            };
+
+            properties.Add(navigationPropety);
+        }
+
+        return properties;
     }
 
     private string GetPropertyName(SqlColumnConfigurationModel column)
@@ -49,26 +66,15 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
             return "Id";
         }
 
-        if (column.IsForeignKey && column.Relation is not null &&
-            column.ColumnName.Contains("Id", StringComparison.OrdinalIgnoreCase))
-        {
-            return ToDotnetName(column.Relation.TargetTable);
-        }
-
         return ToDotnetName(column.ColumnName);
     }
 
     private string GetPropertyType(SqlColumnConfigurationModel column, DbmsType dbms)
     {
-        if (column.IsForeignKey && column.Relation is not null)
-        {
-            return ToDotnetName(column.Relation.TargetTable);
-        }
-
         return PropertyTypeMapper.Map(dbms, column.ColumnType);
     }
 
-    private void AddNavigationCollections(IEnumerable<DotnetEntityConfigurationModel> entities)
+    private void AddRevertedNavigationProperties(IEnumerable<DotnetEntityConfigurationModel> entities)
     {
         var entityLookup = entities.ToDictionary(e => e.EntityName, e => e);
         foreach (var entity in entities)

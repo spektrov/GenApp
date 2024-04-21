@@ -58,9 +58,13 @@ internal class ModelsGenCommand(IFileGenService fileGenService, IMapper mapper, 
 
     private Task GenerateEntityResponse(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
     {
-        var properties = entity.Properties.OrderByDescending(x => x.IsId).ThenBy(x => x.IsNavigation);
+        var properties = entity.Properties
+            .Where(x => !x.IsForeignRelation)
+            .OrderByDescending(x => x.IsId)
+            .ThenBy(x => x.IsNavigation);
         var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties)
-            .Select(AdjustProperty).ToList();
+            .Select(AdjustProperty)
+            .ToList();
 
         return fileGenService.CreateEntryAsync(
             archive,

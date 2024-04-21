@@ -12,8 +12,8 @@ public class DotnetRelationMapper(ICaseTransformer caseTransformer) : IDotnetRel
 
         var relation = new DotnetEntityRelationModel
         {
-            SourceEntity = caseTransformer.ToPascalCase(sqlRelation.SourceTable),
-            TargetEntity = caseTransformer.ToPascalCase(sqlRelation.TargetTable),
+            SourceEntity = ToDotnetName(sqlRelation.SourceTable),
+            TargetEntity = ToDotnetName(sqlRelation.TargetTable),
             IsOneToOne = sqlRelation.IsOneToOne,
             IsRequired = sqlRelation.IsRequired,
         };
@@ -27,13 +27,21 @@ public class DotnetRelationMapper(ICaseTransformer caseTransformer) : IDotnetRel
 
         var relation = new DotnetEntityRelationModel
         {
-            SourceEntity = dotnetRelation.TargetEntity,
-            TargetEntity = dotnetRelation.SourceEntity,
+            SourceEntity = ToDotnetName(dotnetRelation.TargetEntity),
+            TargetEntity = ToDotnetName(dotnetRelation.SourceEntity),
             IsOneToOne = dotnetRelation.IsOneToOne,
             IsRequired = dotnetRelation.IsRequired && dotnetRelation.IsOneToOne,
             IsReverted = true,
         };
 
         return relation;
+    }
+
+    private string ToDotnetName(string tableName)
+    {
+        var singular = caseTransformer.ToSignular(tableName);
+        var pascal = caseTransformer.ToPascalCase(singular);
+
+        return pascal;
     }
 }

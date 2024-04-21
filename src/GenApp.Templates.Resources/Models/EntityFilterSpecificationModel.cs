@@ -18,4 +18,6 @@ public class EntityFilterSpecificationModel : BaseTemplateModel, ICsharpClassMod
     public string PropertyName { get; set; }
 
     public string PropertyType { get; set; }
+
+    public bool IsNullable { get; set; }
 }
