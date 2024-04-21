@@ -6,7 +6,7 @@ using GenApp.DomainServices.Extensions;
 using GenApp.Templates.Resources.DTOs;
 using GenApp.Templates.Resources.Models;
 
-namespace GenApp.DomainServices.CommandHandlers;
+namespace GenApp.DomainServices.CommandHandlers.SolutionLevel;
 
 internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenCommand
 {
@@ -42,42 +42,42 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
                     new() { Name = "AutoMapper", Version = "13.0.1" },
                 },
                 Includes = new List<string>
-				{
-					$"..\\{model.AppName}.DAL\\{model.AppName}.DAL.csproj"
-				},
+                {
+                    $"..\\{model.AppName}.DAL\\{model.AppName}.DAL.csproj"
+                },
             },
             token);
 
         await fileGenService.CreateEntryAsync(
-	        archive,
-	        $"{model.AppName}.API.csproj".ToApiProjectFile(model.AppName),
-	        new ProjectFileModel
-	        {
-		        Type = webType,
-		        SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
-		        Packages = new List<PackageDto>
-		        {
-					 new() { Name = "Swashbuckle.AspNetCore", Version = "6.5.0" },
-					 new() { Name = "AutoMapper", Version = "13.0.1" },
-		        },
-		        Includes = new List<string>
+            archive,
+            $"{model.AppName}.API.csproj".ToApiProjectFile(model.AppName),
+            new ProjectFileModel
+            {
+                Type = webType,
+                SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
+                Packages = new List<PackageDto>
                 {
-					$"..\\{model.AppName}.BLL\\{model.AppName}.BLL.csproj"
+                     new() { Name = "Swashbuckle.AspNetCore", Version = "6.5.0" },
+                     new() { Name = "AutoMapper", Version = "13.0.1" },
                 },
-	        },
-	        token);
-	}
+                Includes = new List<string>
+                {
+                    $"..\\{model.AppName}.BLL\\{model.AppName}.BLL.csproj"
+                },
+            },
+            token);
+    }
 
     private PackageDto DbPackageResolver(DbmsType dbmsType)
     {
-		return dbmsType switch
-		{
-			DbmsType.MSSQLSERVER => new PackageDto { Name = "Microsoft.EntityFrameworkCore.SqlServer", Version = "6.0.27" },
-			DbmsType.MYSQL => new PackageDto { Name = "Pomelo.EntityFrameworkCore.MySql", Version = "6.0.2" },
-			DbmsType.POSTGRESQL => new PackageDto { Name = "Npgsql.EntityFrameworkCore.PostgreSQL", Version = "6.0.22" },
-			_ => throw new ArgumentException("Dbms type is not defined"),
-		};
-	}
+        return dbmsType switch
+        {
+            DbmsType.MSSQLSERVER => new PackageDto { Name = "Microsoft.EntityFrameworkCore.SqlServer", Version = "6.0.27" },
+            DbmsType.MYSQL => new PackageDto { Name = "Pomelo.EntityFrameworkCore.MySql", Version = "6.0.2" },
+            DbmsType.POSTGRESQL => new PackageDto { Name = "Npgsql.EntityFrameworkCore.PostgreSQL", Version = "6.0.22" },
+            _ => throw new ArgumentException("Dbms type is not defined"),
+        };
+    }
 
     private string BuildNetSdkVersion(int version)
     {
