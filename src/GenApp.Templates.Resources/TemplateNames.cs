@@ -93,4 +93,6 @@ public static class TemplateNames
     public const string Dockerfile = nameof(Dockerfile);
 
     public const string Appsettings = nameof(Appsettings);
+
+    public const string DockerCompose = nameof(DockerCompose);
 }
