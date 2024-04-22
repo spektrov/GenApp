@@ -44,7 +44,7 @@ internal class BootstrapGenCommand(IFileGenService fileGenService) : IGenCommand
             DbmsType.POSTGRESQL => "UseNpgsql",
             DbmsType.MYSQL => "UseMySql",
             DbmsType.MSSQLSERVER => "UseSqlServer",
-            _ => "UseSqlServer",
+            _ => throw new ArgumentException("Dbms type is not defined"),
         };
     }
 }
