@@ -18,6 +18,8 @@ public static class PropertyTypeMapper
         return dbmsType switch
         {
             DbmsType.MSSQLSERVER => MapForDbms(sqlType, DotnetMsSqlServerTypes.Value),
+            DbmsType.MYSQL => MapForDbms(sqlType, DotnetMySqlTypes.Value),
+            DbmsType.POSTGRESQL => MapForDbms(sqlType, DotnetPostgreSqlTypes.Value),
             _ => throw new ArgumentException("Not supported DBMS type"),
         };
     }

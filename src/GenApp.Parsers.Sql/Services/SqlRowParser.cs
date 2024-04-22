@@ -108,7 +108,7 @@ internal class SqlRowParser : ISqlRowParser
             return SplitBySeparator(pkColumns, Constants.ComaSeparator);
         }
 
-        return defenition.Split(Constants.SpaceSeparator).Select(component => component.Trim());
+        return SplitBySeparator(defenition, Constants.SpaceSeparator).Take(1);
     }
 
     private string? GetValueInParenthesis(string str)

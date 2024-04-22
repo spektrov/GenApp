@@ -7,7 +7,7 @@ using GenApp.Parsers.Sql.Interfaces;
 namespace GenApp.Parsers.Sql.Services;
 internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 {
-    private static readonly string TablePropertyPattern = @"\,\d+|[\)\(;]|\b\d+\b|[\n]";
+    private static readonly string NotPropertyPattern = @"\,\d+|[\)\(;]|\b\d+\b|[\n]";
 
     public Result<IEnumerable<SqlTableConfigurationModel>> BuildTablesConfiguration(string sqlCreateTables)
     {
@@ -26,10 +26,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     private Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
     {
         var tableName = tableLine.Split(Constants.SpaceSeparator, StringSplitOptions.RemoveEmptyEntries).First().Trim();
-        var otherItems = tableLine[tableName.Length..];
-
-        var definitions = otherItems.Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
-            .Where(x => !string.IsNullOrWhiteSpace(x));
+        var definitions = ToTableDefinitions(tableLine, tableName.Length);
 
         var columns = definitions
             .Where(sqlRowParser.IsPlainColumn)
@@ -85,6 +82,16 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 
     private string ToPropertyPattern(string line)
     {
-        return Regex.Replace(line, TablePropertyPattern, string.Empty);
+        return Regex.Replace(line, NotPropertyPattern, string.Empty);
+    }
+
+    private IEnumerable<string> ToTableDefinitions(string tableLine, int tableNameLength)
+    {
+        var otherItems = tableLine[tableNameLength..];
+        var withoutBraces = otherItems.Trim().Substring(1, otherItems.Length - 4);
+        var definitions = withoutBraces
+            .Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
+            .Where(x => !string.IsNullOrWhiteSpace(x));
+        return definitions;
     }
 }
