@@ -9,9 +9,7 @@ internal class DockerfileGenCommand(IFileGenService fileGenService) : IGenComman
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        if (model.UseDocker)
-        {
-            await fileGenService.CreateEntryAsync(
+        await fileGenService.CreateEntryAsync(
             archive,
             $"Dockerfile".ToApiProjectFile(model.AppName),
             new DockerfileModel
@@ -20,6 +18,5 @@ internal class DockerfileGenCommand(IFileGenService fileGenService) : IGenComman
                 DotnetSdkVersion = $"{model.DotnetSdkVersion}.0"
             },
             token);
-        }
     }
 }
