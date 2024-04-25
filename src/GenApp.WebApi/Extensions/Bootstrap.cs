@@ -16,7 +16,7 @@ public static class Bootstrap
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        services.AddValidatorsFromAssemblyContaining<GenSettingsDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<FileGenSettingsDtoValidator>();
 
         return services;
     }

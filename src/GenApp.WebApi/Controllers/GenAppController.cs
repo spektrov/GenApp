@@ -13,17 +13,46 @@ namespace GenApp.WebApi.Controllers;
 public class GenAppController(
     IMapper mapper,
     ISolutionGenService solutionGenService,
-    IValidator<GenSettingsDto> validator) : ControllerBase
+    IValidator<StringGenSettingsDto> stringSettingsValidator,
+    IValidator<FileGenSettingsDto> fileSettingsValidator) : ControllerBase
 {
     [HttpPost]
-    public async Task<Result<Stream>> GenerateWebApiAsync(
-        [FromBody] GenSettingsDto genSettingsDto,
+    public async Task<Result<Stream>> GenerateWebAppAsync(
+        [FromBody] StringGenSettingsDto genSettingsDto,
         CancellationToken token)
     {
-        await validator.ValidateAndThrowAsync(genSettingsDto, token);
+        await stringSettingsValidator.ValidateAndThrowAsync(genSettingsDto, token);
 
         var settingsModel = mapper.Map<ApplicationDataModel>(genSettingsDto);
-        Response.Headers.Append("Content-Disposition", $"attachment; filename={settingsModel.AppName}.zip");
+
+        AddContentHeader(settingsModel.AppName);
+
         return await solutionGenService.GenerateApplicationAsync(settingsModel, token);
+    }
+
+    [HttpPost("file")]
+    public async Task<Result<Stream>> GenerateWebAppAsync(
+        [FromForm] FileGenSettingsDto genSettingsDto,
+        CancellationToken token)
+    {
+        await fileSettingsValidator.ValidateAndThrowAsync(genSettingsDto, token);
+
+        var settingsModel = mapper.Map<ApplicationDataModel>(genSettingsDto);
+        settingsModel.SqlTableScript = await ReadFileContentAsync(genSettingsDto.File);
+
+        AddContentHeader(settingsModel.AppName);
+
+        return await solutionGenService.GenerateApplicationAsync(settingsModel, token);
+    }
+
+    private void AddContentHeader(string appName)
+    {
+        Response.Headers.Append("Content-Disposition", $"attachment; filename={appName}.zip");
+    }
+
+    private async Task<string> ReadFileContentAsync(IFormFile file)
+    {
+        using var reader = new StreamReader(file.OpenReadStream());
+        return await reader.ReadToEndAsync();
     }
 }

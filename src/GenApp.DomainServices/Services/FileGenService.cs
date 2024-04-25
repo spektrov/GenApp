@@ -13,11 +13,8 @@ public class FileGenService(ITemplateParser templateParser) : IFileGenService
         BaseTemplateModel model,
         CancellationToken token)
     {
-        var entry = archive.CreateEntry(entryName);
-        await using var entryStream = entry.Open();
         var content = await templateParser.ParseAsync(model, token);
-        var bytes = Encoding.UTF8.GetBytes(content);
-        await entryStream.WriteAsync(bytes, token);
+        await CreateEntryAsync(archive, entryName, content, token);
     }
 
     public async Task CreateEntryAsync(
