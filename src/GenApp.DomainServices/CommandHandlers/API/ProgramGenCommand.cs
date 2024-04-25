@@ -14,7 +14,7 @@ internal class ProgramGenCommand(IFileGenService fileGenService) : IGenCommand
             $"Program.cs".ToApiProjectFile(model.AppName),
             new ProgramModel
             {
-                EnableDocker = model.UseDocker,
+                EnableDocker = true,
                 Usings = new[]
                 {
                     $"{model.AppName}.API",

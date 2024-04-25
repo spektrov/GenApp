@@ -9,11 +9,6 @@ public class DockerignoreGenCommand(IFileGenService fileGenService) : IGenComman
 {
     public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        if (!model.UseDocker)
-        {
-            return Task.CompletedTask;
-        }
-
         return fileGenService.CreateEntryAsync(
                 archive,
                 ".dockerignore".ToCoreSolutionFile(),

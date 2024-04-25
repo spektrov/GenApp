@@ -7,20 +7,21 @@ using GenApp.Templates.Resources.Models;
 using GenApp.Templates.Resources.DTOs;
 
 namespace GenApp.DomainServices.CommandHandlers.SolutionLevel;
-public class DockerComposeGenCommand(IFileGenService fileGenService) : IGenCommand
+public class DockerComposeGenCommand(IFileGenService fileGenService, IConnectionDetailsProvider connectionProvider) : IGenCommand
 {
     public Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        if (!model.UseDocker)
+        if (!model.UseDocker || !string.IsNullOrEmpty(model.ConnectionString))
         {
             return Task.CompletedTask;
         }
 
+        var connection = connectionProvider.Get(model);
+
         var dockerModel = model.DbmsType switch
         {
-            DbmsType.MYSQL => GetForMySql(model.AppName),
-            DbmsType.MSSQLSERVER => GetForMsSqlServer(model.AppName),
-            DbmsType.POSTGRESQL => GetForPosgreSql(model.AppName),
+            DbmsType.MYSQL => GetForMySql(model.AppName, connection),
+            DbmsType.POSTGRESQL => GetForPosgreSql(model.AppName, connection),
             _ => throw new ArgumentException("Invalid DBMS type"),
         };
 
@@ -31,7 +32,7 @@ public class DockerComposeGenCommand(IFileGenService fileGenService) : IGenComma
             token);
     }
 
-    private DockerComposeModel GetForPosgreSql(string appName)
+    private DockerComposeModel GetForPosgreSql(string appName, ConnectionDetailsModel connection)
     {
         return new DockerComposeModel
         {
@@ -42,14 +43,14 @@ public class DockerComposeGenCommand(IFileGenService fileGenService) : IGenComma
             DockerProjectName = $"{appName}.API",
             EnvVariables = new List<VariableDto>
             {
-                new() { Name = "POSTGRES_PASSWORD", Value = "" },
-                new() { Name = "POSTGRES_USER", Value = "" },
-                new() { Name = "POSTGRES_DB", Value = "" },
+                new() { Name = "POSTGRES_PASSWORD", Value = $"{connection.Password}" },
+                new() { Name = "POSTGRES_USER", Value = $"{connection.User}" },
+                new() { Name = "POSTGRES_DB", Value = $"{connection.DbName}" },
             },
         };
     }
 
-    private DockerComposeModel GetForMySql(string appName)
+    private DockerComposeModel GetForMySql(string appName, ConnectionDetailsModel connection)
     {
         return new DockerComposeModel
         {
@@ -60,27 +61,10 @@ public class DockerComposeGenCommand(IFileGenService fileGenService) : IGenComma
             DockerProjectName = $"{appName}.API",
             EnvVariables = new List<VariableDto>
             {
-                new() { Name = "MYSQL_ROOT_PASSWORD", Value = "" },
-                new() { Name = "MYSQL_USER", Value = "" },
-                new() { Name = "MYSQL_PASSWORD", Value = "" },
-                new() { Name = "MYSQL_DATABASE", Value = "" },
-            },
-        };
-    }
-
-    private DockerComposeModel GetForMsSqlServer(string appName)
-    {
-        return new DockerComposeModel
-        {
-            DbServiceName = "sqlserver-db",
-            DbImageName = "mcr.microsoft.com/mssql/server:2019-latest",
-            DbPorts = "5433:1433",
-            VolumesValue = "~/apps/sqlserver:/var/opt/mssql",
-            DockerProjectName = $"{appName}.API",
-            EnvVariables = new List<VariableDto>
-            {
-                new() { Name = "SA_PASSWORD", Value = "" },
-                new() { Name = "ACCEPT_EULA", Value = "Y" },
+                new() { Name = "MYSQL_ROOT_PASSWORD", Value = $"{connection.Password}" },
+                new() { Name = "MYSQL_USER", Value = $"{connection.User}" },
+                new() { Name = "MYSQL_PASSWORD", Value = $"{connection.Password}" },
+                new() { Name = "MYSQL_DATABASE", Value = $"{connection.DbName}" },
             },
         };
     }
