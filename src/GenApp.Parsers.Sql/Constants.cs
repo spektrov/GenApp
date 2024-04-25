@@ -11,6 +11,7 @@ public static class Constants
     public const string PrimaryKey = "primary key";
     public const char ComaSeparator = ',';
     public const char SpaceSeparator = ' ';
+    public const char OpenBracesSeparator = '(';
     public const string LineSeparator = "\n";
 
     public static readonly string[] Constraints =

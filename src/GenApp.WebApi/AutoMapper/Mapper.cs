@@ -8,7 +8,9 @@ public class Mapper : Profile
 {
     public Mapper()
     {
-        CreateMap<GenSettingsDto, ApplicationDataModel>()
+        CreateMap<StringGenSettingsDto, ApplicationDataModel>()
             .ForMember(dest => dest.SqlTableScript, src => src.MapFrom(x => x.SqlScript));
+
+        CreateMap<FileGenSettingsDto, ApplicationDataModel>();
     }
 }

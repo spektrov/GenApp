@@ -12,8 +12,8 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     public Result<IEnumerable<SqlTableConfigurationModel>> BuildTablesConfiguration(string sqlCreateTables)
     {
         // Split script into individual 'create table' statements
-        var singleLineSqlScript = sqlCreateTables.Replace(Constants.LineSeparator, string.Empty);
-        var statements = Regex.Split(singleLineSqlScript, Constants.CreateTable, RegexOptions.IgnoreCase)
+        var preparedScript = PrepareSingleLineScript(sqlCreateTables);
+        var statements = Regex.Split(preparedScript, Constants.CreateTable, RegexOptions.IgnoreCase)
             .Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim());
 
         var tableConfigResults = statements.Select(BuildTableConfiguration).ToList();
@@ -25,7 +25,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 
     private Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
     {
-        var tableName = tableLine.Split(Constants.SpaceSeparator, StringSplitOptions.RemoveEmptyEntries).First().Trim();
+        var tableName = tableLine.Split(Constants.OpenBracesSeparator, StringSplitOptions.RemoveEmptyEntries).First().Trim();
         var definitions = ToTableDefinitions(tableLine, tableName.Length);
 
         var columns = definitions
@@ -80,6 +80,14 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
         }
     }
 
+    private string PrepareSingleLineScript(string sqlCreateTables)
+    {
+        var singleLineSqlScript = Regex.Replace(sqlCreateTables, @"\r\n?|\n", string.Empty);
+        var singleSpacesSqlScript = Regex.Replace(singleLineSqlScript, @"\s+", " ");
+
+        return singleSpacesSqlScript;
+    }
+
     private string ToPropertyPattern(string line)
     {
         return Regex.Replace(line, NotPropertyPattern, string.Empty);
@@ -88,7 +96,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     private IEnumerable<string> ToTableDefinitions(string tableLine, int tableNameLength)
     {
         var otherItems = tableLine[tableNameLength..];
-        var withoutBraces = otherItems.Trim().Substring(1, otherItems.Length - 4);
+        var withoutBraces = otherItems.Trim().Substring(1, otherItems.Length - 3);
         var definitions = withoutBraces
             .Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
             .Where(x => !string.IsNullOrWhiteSpace(x));
