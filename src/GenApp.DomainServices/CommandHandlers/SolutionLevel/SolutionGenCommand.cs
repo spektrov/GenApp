@@ -4,7 +4,7 @@ using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
 using GenApp.Templates.Resources.StaticTemplates;
 
-namespace GenApp.DomainServices.CommandHandlers;
+namespace GenApp.DomainServices.CommandHandlers.SolutionLevel;
 
 internal class SolutionGenCommand(IFileGenService fileGenService) : IGenCommand
 {

@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  @Model.DbServiceName:
+    image: @Model.DbImageName
+    ports:
+      - @Model.DbPorts
+    volumes:
+      - @Model.VolumesValue
+    environment:
+      @foreach(var envVar in Model.EnvVariables)
+      {
+      @:- @envVar.Name=@envVar.Value
+      }
+
+  api:
+    build:
+      context: .
+      dockerfile: src/@Model.DockerProjectName/Dockerfile
+    ports:
+      - 8080:80
+    depends_on:
+      - @Model.DbServiceName

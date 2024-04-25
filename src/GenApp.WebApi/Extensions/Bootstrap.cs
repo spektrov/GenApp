@@ -1,4 +1,6 @@
-﻿using GenApp.WebApi.ActionFilters;
+﻿using FluentValidation;
+using GenApp.WebApi.ActionFilters;
+using GenApp.WebApi.Validators;
 
 namespace GenApp.WebApi.Extensions;
 
@@ -13,6 +15,8 @@ public static class Bootstrap
         });
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddValidatorsFromAssemblyContaining<GenSettingsDtoValidator>();
 
         return services;
     }
