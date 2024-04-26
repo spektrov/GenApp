@@ -1,1 +1,47 @@
-<p>genapp-page works!</p>
+<div>
+    Generate .NET WebApi application by SQL schema
+    <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+        <div>
+            <input type="file" (change)="onFileChange($event)">
+            <div *ngIf="!selectedFile">
+                Please select a file. File should be a .txt or .sql and should not be more than 1MB.
+            </div>
+        </div>
+
+        <div>
+            <label for="appName">Application Name</label>
+            <input id="appName" type="text" formControlName="appName">
+        </div>
+
+        <div>
+            <label for="dotnetSdkVersion">Dotnet Version</label>
+            <select id="dotnetSdkVersion" formControlName="dotnetSdkVersion">
+                <option [value]="8">.NET 8</option>
+                <option [value]="7">.NET 7</option>
+                <option [value]="6">.NET 6</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="dbmsType">DBMS</label>
+            <select id="dbmsType" formControlName="dbmsType">
+                <option *ngFor="let type of dbmsTypes" [value]="type.key">{{type.value}}</option>
+            </select>
+        </div>
+
+        <div *ngIf="showUseDocker()">
+            <label for="useDocker">Create Database in Docker Container</label>
+            <input id="useDocker" formControlName="useDocker" type="checkbox">
+        </div>
+
+        <div *ngIf="showConnectionString()">
+            <label for="connectionString">Database Connection String</label>
+            <input id="connectionString" formControlName="connectionString" type="text">
+        </div>
+
+        <div>
+            <button type="submit" [disabled]="!form.valid || !selectedFile">Generate App</button>
+        </div>
+
+    </form>
+</div>

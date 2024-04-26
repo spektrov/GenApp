@@ -1,5 +1,5 @@
-const DbmsType = {
-    MSSQLSERVER: "SQL Server",
+export const DbmsType = {
     POSTGRESQL: "PostgreSQL",
+    MSSQLSERVER: "SQL Server",
     MYSQL: "MySQL",
   };
