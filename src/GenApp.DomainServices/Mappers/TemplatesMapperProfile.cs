@@ -10,6 +10,13 @@ public class TemplatesMapperProfile : Profile
         CreateMap<DotnetPropertyConfigurationModel, DotnetPropertyDto>()
             .ForMember(dest => dest.Nullable, src => src.MapFrom(x => x.NotNull ? string.Empty : "?"))
             .ForMember(dest => dest.IsRequired, src => src.MapFrom(x => x.NotNull ? "required " : string.Empty))
-            .ForMember(dest => dest.IsCollectionNavigation, src => src.MapFrom(x => x.Relation != null ? !x.Relation.IsOneToOne && !x.Relation.IsReverted : false));
+            .ForMember(dest => dest.IsCollectionNavigation, src => src.MapFrom(x => MapIsNavigationCollection(x)));
+    }
+
+    private bool MapIsNavigationCollection(DotnetPropertyConfigurationModel property)
+    {
+        return property.Relation != null
+            && !property.Relation.IsOneToOne
+            && property.Relation.IsReverted;
     }
 }

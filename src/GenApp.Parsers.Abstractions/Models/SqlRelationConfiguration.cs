@@ -12,4 +12,6 @@ public class SqlRelationConfiguration
     public bool IsOneToOne { get; set; }
 
     public bool IsRequired { get; set; }
+
+    public bool HasManyFKToOneTable { get; set; }
 }

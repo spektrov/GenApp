@@ -18,7 +18,7 @@ public class GenAppController(
     IValidator<FileGenSettingsDto> fileSettingsValidator) : ControllerBase
 {
     [AddContentHeader]
-    [HttpPost]
+    [HttpPost("text")]
     public async Task<Result<Stream>> GenerateWebAppAsync(
         [FromBody] StringGenSettingsDto genSettingsDto,
         CancellationToken token)
