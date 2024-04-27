@@ -4,6 +4,7 @@ import { GenappService } from '../../services/genapp.service';
 import { CommonModule } from '@angular/common';
 import { DbmsType } from '../../models/dbmsType';
 import { FileDataRequest } from '../../models/fileDataRequest';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-genapp-page',
@@ -14,6 +15,7 @@ import { FileDataRequest } from '../../models/fileDataRequest';
   styleUrl: './genapp-page.component.css'
 })
 export class GenappPageComponent {
+  isLoading = false;
 
   dbmsTypes = Object.entries(DbmsType).map(([key, value]) => ({key, value}));
   selectedFile: File | null = null; 
@@ -27,7 +29,7 @@ export class GenappPageComponent {
       dotnetSdkVersion: ['8', [Validators.required]],
       useDocker: [false, [Validators.required]],
       connectionString: [null]
-    });
+    }, { validator: this.dockerOrConnectionStringValidator });
   }
 
   ngOnInit(): void {
@@ -55,12 +57,15 @@ export class GenappPageComponent {
         appName: this.form.get('appName')?.value,
         dotnetSdkVersion: this.form.get('dotnetSdkVersion')?.value,
         useDocker: this.form.get('useDocker')?.value,
-        connectionString: this.form.get('connectionString')?.value
+        connectionString: !this.form.get('useDocker')?.value ? this.form.get('connectionString')?.value : null
       }
 
-      console.log(request);
-
-      this.genappService.generateWebApp(request).subscribe();
+      this.isLoading = true;
+      this.genappService.generateWebApp(request)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe((blob: Blob) => {
+        this.genappService.downloadFile(blob, request.appName);
+      });
     }
   }
 
@@ -88,4 +93,14 @@ export class GenappPageComponent {
 
     return valid;
   }
+
+  private dockerOrConnectionStringValidator(formGroup: FormGroup) {
+    const useDocker = formGroup.get('useDocker')?.value;
+    const connectionString = formGroup.get('connectionString')?.value;
+    if (useDocker === true || (connectionString && connectionString.trim() !== '')) {
+        return null;
+    } else {
+        return { dockerOrConnectionString: true };
+    }
+}
 }

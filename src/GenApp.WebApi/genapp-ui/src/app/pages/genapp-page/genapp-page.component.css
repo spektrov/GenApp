@@ -1,0 +1,135 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    background-color: #e2f5f2;
+    padding: 20px;
+  }
+
+  .form-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 90%;
+    min-width: 33%;
+    padding: 25px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  }
+  
+  .form-title {
+    margin: 0 auto;
+    
+    p {
+      font-weight: bold;
+      font-size: 1.3em;
+    }
+  }
+
+  .form-item {
+    width: 100%;
+  }
+
+  .form-button {
+    width: 150px;
+    height: 40px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  form div:not(:last-child) {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  select, input[type="text"], input[type="file"] {
+    width: 95%;
+    padding: 10px 15px;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    background-color: #ffffff;
+    font-size: 16px;
+  }
+  
+  button {
+    width: 100%;
+    height: 100%;
+    color: white;
+    background-color: #189345;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: default;
+  }
+
+  /* Custom checkbox */
+  
+  [type="checkbox"] {
+    display: none;
+  }
+  
+  [type="checkbox"] + label {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    display: inline-block;
+  }
+  
+  [type="checkbox"] + label:before {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: 0;
+    left: 0;
+    border: 2px solid #999;
+    border-radius: 4px;
+    background-color: #FFF;
+  }
+  
+  [type="checkbox"]:checked + label:after {
+    content: '\2714'; /* unicode checkmark */
+    color: #1a1a1a;
+    font-size: 18px;
+    position: absolute;
+    top: -3px;
+    left: 4px;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* higher than your form */
+  }
+  
+  .spinner {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

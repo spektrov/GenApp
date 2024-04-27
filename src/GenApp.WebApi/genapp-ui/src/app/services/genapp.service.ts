@@ -17,23 +17,22 @@ export class GenappService {
 
     let formData = this.toFormData(request);
 
-    return this.httpClient.post(url, formData, { responseType: 'blob' as 'json', observe: 'events' })
-    .pipe(
-      switchMap((event: HttpEvent<any>): Observable<Blob> => {
-          // Filter events to only handle HttpEventType.Response
-          if (event.type === HttpEventType.Response) {
-              return of(new Blob([event.body], { type: 'application/zip' }));
-          }
-          return of();
-      }),
-      tap(blob => {
-        if(blob.size > 0) {
-          let url = window.URL.createObjectURL(blob);
-          window.open(url);
-        }
+    return this.httpClient.post(url, formData, { responseType: 'blob' as 'json' }).pipe(
+      map((res: any) => {
+          return new Blob([res], { type: 'application/zip' });
       })
     );
   }
+
+  downloadFile(blob: Blob, fileName: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName + '.zip';
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+}
 
   private toFormData(request: FileDataRequest): FormData {
     const formData = new FormData();
