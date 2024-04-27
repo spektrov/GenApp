@@ -6,8 +6,9 @@ namespace GenApp.WebApi.Extensions;
 
 public static class Bootstrap
 {
-    public static IServiceCollection AddWebApi(this IServiceCollection services)
+    public static IServiceCollection AddWebApi(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddCors(configuration);
         services.AddAutoMapper(typeof(Bootstrap).Assembly);
         services.AddControllers(options =>
         {
