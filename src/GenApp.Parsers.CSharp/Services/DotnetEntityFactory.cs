@@ -27,7 +27,6 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
     private IEnumerable<DotnetPropertyConfigurationModel> MapToProperty(SqlColumnConfigurationModel column, DbmsType dbms)
     {
         // TODO: handle when not simple PK - should not create id property
-        // TODO: handle when FK - should create navigation and FK id property
         var properties = new List<DotnetPropertyConfigurationModel>();
 
         var property = new DotnetPropertyConfigurationModel
@@ -46,7 +45,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         {
             var navigationPropety = new DotnetPropertyConfigurationModel
             {
-                Name = ToDotnetName(column.Relation!.TargetTable),
+                Name = GetNavigationPropertyName(column),
                 Type = ToDotnetName(column.Relation!.TargetTable),
                 NotNull = column.NotNull,
                 IsNavigation = true,
@@ -69,6 +68,34 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         return ToDotnetName(column.ColumnName);
     }
 
+    private string GetNavigationPropertyName(SqlColumnConfigurationModel column)
+    {
+        if (!column.IsForeignKey || column.Relation is null)
+        {
+            return ToDotnetName(column.ColumnName);
+        }
+
+        if (column.Relation.HasManyFKToOneTable)
+        {
+            return ToDotnetName(RemoveIdSuffix(column.ColumnName));
+        }
+
+        return ToDotnetName(column.Relation.TargetTable);
+    }
+
+    private string GetRevertedNavigationPropertyName(
+        string sourceEntityName, string targetEntityName, string navigationPropertyName)
+    {
+        return navigationPropertyName == targetEntityName
+            ? sourceEntityName
+            : navigationPropertyName + sourceEntityName;
+    }
+
+    private string RemoveIdSuffix(string input)
+    {
+        return input.EndsWith("id", StringComparison.OrdinalIgnoreCase) ? input[..^2] : input;
+    }
+
     private string GetPropertyType(SqlColumnConfigurationModel column, DbmsType dbms)
     {
         return PropertyTypeMapper.Map(dbms, column.ColumnType);
@@ -88,8 +115,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
                     {
                         var navigationProperty = new DotnetPropertyConfigurationModel
                         {
-                            // TODO: handle when many FK to one table
-                            Name = entity.EntityName,
+                            Name = GetRevertedNavigationPropertyName(entity.EntityName, targetEntityName, property.Name),
                             Type = entity.EntityName,
                             IsNavigation = true,
                             Relation = relationMapper.MapReverted(property.Relation),

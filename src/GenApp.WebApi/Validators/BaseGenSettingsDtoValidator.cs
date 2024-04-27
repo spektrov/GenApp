@@ -8,9 +8,16 @@ public class BaseGenSettingsDtoValidator<T> : AbstractValidator<T>
 {
     public BaseGenSettingsDtoValidator()
     {
-        RuleFor(x => x.DbmsType).NotEmpty();
-        RuleFor(x => x.AppName).NotEmpty().Length(2, 30);
-        RuleFor(x => x.DotnetSdkVersion).GreaterThanOrEqualTo(6).LessThanOrEqualTo(8);
+        RuleFor(x => x.DbmsType)
+            .NotEmpty();
+        RuleFor(x => x.AppName)
+            .NotEmpty()
+            .Length(2, 30)
+            .Matches(@"^[a-zA-Z]+$")
+            .WithMessage("AppName can only contain Latin characters.");
+        RuleFor(x => x.DotnetSdkVersion)
+            .GreaterThanOrEqualTo(6)
+            .LessThanOrEqualTo(8);
         When(x => !x.UseDocker, () =>
         {
             RuleFor(x => x.ConnectionString).NotEmpty();

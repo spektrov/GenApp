@@ -69,12 +69,16 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
         foreach (var column in columns)
         {
             var relation = foreignKeysLookup[column.ColumnName].FirstOrDefault();
+            var sameFKTable = relation is not null &&
+                foreignKeys.Where(fk => fk is not null)
+                .Any(x => x.TargetTable == relation.TargetTable && x.SourceColumns != relation.SourceColumns);
             if (relation != null)
             {
                 column.IsForeignKey = true;
                 relation.SourceTable = sourceTable;
                 relation.IsOneToOne = column.Unique;
                 relation.IsRequired = column.NotNull;
+                relation.HasManyFKToOneTable = sameFKTable;
                 column.Relation = relation;
             }
         }
