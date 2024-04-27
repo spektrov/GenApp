@@ -1,1 +1,54 @@
-<p>genapp-page works!</p>
+<div class="container">
+    <form class="form-container" [formGroup]="form" (ngSubmit)="onFormSubmit()">
+        <div class="form-title">
+            <p>Generate .NET WebApi application by SQL schema</p>
+        </div>
+
+        <div class="form-item">
+            <input type="file" (change)="onFileChange($event)">
+            <div *ngIf="!selectedFile">
+                Please select a file. File should be a .txt or .sql and should not be more than 1MB.
+            </div>
+        </div>
+
+        <div class="form-item">
+            <label for="appName">Application Name</label>
+            <input id="appName" type="text" formControlName="appName">
+        </div>
+
+        <div class="form-item">
+            <label for="dotnetSdkVersion">Dotnet Version</label>
+            <select id="dotnetSdkVersion" formControlName="dotnetSdkVersion">
+                <option [value]="8">.NET 8</option>
+                <option [value]="7">.NET 7</option>
+                <option [value]="6">.NET 6</option>
+            </select>
+        </div>
+
+        <div class="form-item">
+            <label for="dbmsType">DBMS</label>
+            <select id="dbmsType" formControlName="dbmsType">
+                <option *ngFor="let type of dbmsTypes" [value]="type.key">{{type.value}}</option>
+            </select>
+        </div>
+
+        <div class="form-item" *ngIf="showUseDocker()">
+            <input id="useDocker" formControlName="useDocker" type="checkbox" checked="true">
+            <label for="useDocker">Create Database in Docker Container</label>
+        </div>
+
+        <div class="form-item" *ngIf="showConnectionString()">
+            <label for="connectionString">Database Connection String</label>
+            <input id="connectionString" formControlName="connectionString" type="text">
+        </div>
+
+        <div class="form-item form-button">
+            <button type="submit" [disabled]="!form.valid || !selectedFile">Generate App</button>
+        </div>
+
+    </form>
+
+    <div class="overlay" *ngIf="isLoading">
+        <div class="spinner"></div>
+    </div>
+</div>

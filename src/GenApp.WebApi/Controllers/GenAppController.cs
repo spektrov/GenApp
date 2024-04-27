@@ -3,12 +3,13 @@ using FluentResults;
 using FluentValidation;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
+using GenApp.WebApi.ActionFilters;
 using GenApp.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenApp.WebApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/genapp")]
 [ApiController]
 public class GenAppController(
     IMapper mapper,
@@ -16,6 +17,7 @@ public class GenAppController(
     IValidator<StringGenSettingsDto> stringSettingsValidator,
     IValidator<FileGenSettingsDto> fileSettingsValidator) : ControllerBase
 {
+    [AddContentHeader]
     [HttpPost]
     public async Task<Result<Stream>> GenerateWebAppAsync(
         [FromBody] StringGenSettingsDto genSettingsDto,
@@ -25,11 +27,10 @@ public class GenAppController(
 
         var settingsModel = mapper.Map<ApplicationDataModel>(genSettingsDto);
 
-        AddContentHeader(settingsModel.AppName);
-
         return await solutionGenService.GenerateApplicationAsync(settingsModel, token);
     }
 
+    [AddContentHeader]
     [HttpPost("file")]
     public async Task<Result<Stream>> GenerateWebAppAsync(
         [FromForm] FileGenSettingsDto genSettingsDto,
@@ -40,14 +41,7 @@ public class GenAppController(
         var settingsModel = mapper.Map<ApplicationDataModel>(genSettingsDto);
         settingsModel.SqlTableScript = await ReadFileContentAsync(genSettingsDto.File);
 
-        AddContentHeader(settingsModel.AppName);
-
         return await solutionGenService.GenerateApplicationAsync(settingsModel, token);
-    }
-
-    private void AddContentHeader(string appName)
-    {
-        Response.Headers.Append("Content-Disposition", $"attachment; filename={appName}.zip");
     }
 
     private async Task<string> ReadFileContentAsync(IFormFile file)
