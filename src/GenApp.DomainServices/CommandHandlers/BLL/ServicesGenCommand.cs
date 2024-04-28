@@ -27,7 +27,7 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
                     EntityName = $"{entity.EntityName}Entity",
                     CommandModelName = $"{entity.EntityName}CommandModel",
                     FindByIdSpecification = $"Find{entity.EntityName}ById",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
+                    KeyType = entity.IdType,
                     GetManyIncludes = GetManyIncludes(entity),
                     GetByIdIncludes = GetByIdIncludes(entity),
                     PropertiesForUpdate = GetPropertiesForUpdate(entity),

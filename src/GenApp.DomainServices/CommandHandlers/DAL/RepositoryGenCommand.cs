@@ -32,7 +32,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
                    RepositoryName = $"{entity.EntityName}Repository",
                    InterfaceName = $"I{entity.EntityName}Repository",
                    EntityName = $"{entity.EntityName}Entity",
-                   KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
+                   KeyType = entity.IdType,
                    FilterParametersName = $"{entity.EntityName}FilterParameters",
                    SearchParametersName = $"{entity.EntityName}SearchParameters",
                    RangeParametersName = $"{entity.EntityName}RangeParameters",

@@ -27,7 +27,7 @@ internal class ControllerGenCommand(IFileGenService fileGenService, ICaseTransfo
                     CreateRequestName = $"{entity.EntityName}CreateRequest",
                     UpdateRequestName = $"{entity.EntityName}UpdateRequest",
                     CommandModelName = $"{entity.EntityName}CommandModel",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
+                    KeyType = entity.IdType,
                     Usings = new List<string>
                     {
                         "AutoMapper",

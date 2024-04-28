@@ -27,7 +27,7 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
                 {
                     Namespace = $"{model.AppName}.DAL.Entities",
                     EntityName = $"{entity.EntityName}Entity",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    KeyType = entity.IdType,
                     Properties = propertyDtos,
                     Usings = usingList,
                 },

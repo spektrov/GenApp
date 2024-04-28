@@ -41,7 +41,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
                     Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
                     SpecificationName = $"Search{entity.EntityName}By{property.Name}",
                     EntityName = $"{entity.EntityName}Entity",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    KeyType = entity.IdType,
                     PropertyName = property.Name,
                     Usings = new List<string>
                     {
@@ -74,7 +74,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
                     Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
                     SpecificationName = $"Find{entity.EntityName}By{property.Name}",
                     EntityName = $"{entity.EntityName}Entity",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    KeyType = entity.IdType,
                     PropertyName = property.Name,
                     PropertyType = property.Type,
                     IsNullable = !property.NotNull && property.Type != DotnetTypes.String,
@@ -108,7 +108,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
                     Namespace = $"{appName}.DAL.Specifications.{entity.EntityName}Specifications",
                     SpecificationName = $"Range{entity.EntityName}By{property.Name}",
                     EntityName = $"{entity.EntityName}Entity",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    KeyType = entity.IdType,
                     PropertyName = property.Name,
                     PropertyType = property.Type,
                     IsNullable = !property.NotNull,

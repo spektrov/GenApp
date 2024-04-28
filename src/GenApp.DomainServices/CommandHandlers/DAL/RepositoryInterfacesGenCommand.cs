@@ -23,7 +23,7 @@ internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService, IC
                 {
                     Name = $"I{name}Repository",
                     EntityName = entityName,
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
+                    KeyType = entity.IdType,
                     Namespace = $"{model.AppName}.DAL.Interfaces",
                     Usings = new[] { $"{model.AppName}.DAL.Entities" },
                 },
