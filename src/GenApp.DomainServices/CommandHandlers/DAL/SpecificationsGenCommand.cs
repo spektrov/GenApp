@@ -23,7 +23,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
 
     private async Task GenerateSearchSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
     {
-        var searchProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Search.Contains(x.Type));
+        var searchProperties = entity.Properties.AddSearchFilter();
         if (!searchProperties.Any())
         {
             return;
@@ -56,7 +56,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
 
     private async Task GenerateFilterSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
     {
-        var filterProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Filter.Contains(x.Type));
+        var filterProperties = entity.Properties.AddFilter();
         if (!filterProperties.Any())
         {
             return;
@@ -90,7 +90,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
 
     private async Task GenerateRangeSpecifications(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
     {
-        var rangeProperties = entity.Properties.Where(x => !x.IsId && !x.IsForeignRelation && DotnetFilterTypes.Range.Contains(x.Type));
+        var rangeProperties = entity.Properties.AddRangeFilter();
         if (!rangeProperties.Any())
         {
             return;

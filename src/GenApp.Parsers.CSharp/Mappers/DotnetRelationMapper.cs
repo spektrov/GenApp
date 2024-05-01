@@ -16,6 +16,7 @@ public class DotnetRelationMapper(ICaseTransformer caseTransformer) : IDotnetRel
             TargetEntity = ToDotnetName(sqlRelation.TargetTable),
             IsOneToOne = sqlRelation.IsOneToOne,
             IsRequired = sqlRelation.IsRequired,
+            OnDeleteAction = OnDeleteActionMapper.Map(sqlRelation.OnDeleteAction),
         };
 
         return relation;

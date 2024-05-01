@@ -66,7 +66,7 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
 
     private ICollection<string> GetManyIncludes(DotnetEntityConfigurationModel entity)
     {
-        return GetIncludes(entity, x => x.Relation!.IsOneToOne);
+        return GetIncludes(entity, x => x.Relation!.IsOneToOne || !x.Relation.IsReverted);
     }
 
     private ICollection<string> GetByIdIncludes(DotnetEntityConfigurationModel entity)
@@ -81,17 +81,17 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
                 && x.Relation != null
                 && (_entities!.HasId(x.Relation.TargetEntity) || !x.IsNavigation)
                 && predicate(x))
-            .Select(x => $"{entity.EntityName}Entity.{GetPropertyName(x.Name, x.Relation!.IsOneToOne)}")
+            .Select(x => $"{entity.EntityName}Entity.{GetPropertyName(x)}")
             .ToList();
     }
 
-    private string GetPropertyName(string name, bool isOneToOne)
+    private string GetPropertyName(DotnetPropertyConfigurationModel property)
     {
-        if (isOneToOne)
+        if (property.Relation is not null && !property.Relation.IsOneToOne && property.Relation.IsReverted)
         {
-            return name;
+            return caseTransformer.ToPascalCase(caseTransformer.ToPlural(property.Name));
         }
 
-        return caseTransformer.ToPascalCase(caseTransformer.ToPlural(name));
+        return property.Name;
     }
 }

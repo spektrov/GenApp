@@ -9,6 +9,7 @@ public static class Constants
     public const string Unique = "unique";
     public const string Check = "check";
     public const string PrimaryKey = "primary key";
+    public const string OnDelete = "on delete";
     public const char ComaSeparator = ',';
     public const char SpaceSeparator = ' ';
     public const char OpenBracesSeparator = '(';

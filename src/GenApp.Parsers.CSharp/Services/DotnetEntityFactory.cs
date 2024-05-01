@@ -52,6 +52,10 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
                 IsNavigation = true,
                 Relation = relationMapper.Map(column.Relation),
             };
+            if (navigationPropety.Relation is not null)
+            {
+                navigationPropety.Relation.ForeignPropertyName = property.Name;
+            }
 
             properties.Add(navigationPropety);
         }
@@ -94,7 +98,9 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
 
     private string RemoveIdSuffix(string input)
     {
-        return input.EndsWith("id", StringComparison.OrdinalIgnoreCase) ? input[..^2] : input;
+        var result = input.EndsWith("id", StringComparison.OrdinalIgnoreCase) ? input[..^2] : input;
+        result = input.EndsWith("_id", StringComparison.OrdinalIgnoreCase) ? input[..^3] : result;
+        return result;
     }
 
     private string GetPropertyType(string columnType, DbmsType dbms)
@@ -122,6 +128,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
                             Relation = relationMapper.MapReverted(property.Relation),
                         };
                         targetEntity.Properties.Add(navigationProperty);
+                        property.Relation.RevertedPropertyName = navigationProperty.Name;
                     }
                 }
             }
