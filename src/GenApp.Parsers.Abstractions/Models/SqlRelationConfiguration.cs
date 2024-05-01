@@ -13,5 +13,7 @@ public class SqlRelationConfiguration
 
     public bool IsRequired { get; set; }
 
+    public string? OnDeleteAction { get; set; }
+
     public bool HasManyFKToOneTable { get; set; }
 }

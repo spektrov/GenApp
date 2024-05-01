@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using GenApp.Parsers.Abstractions.Constants;
 using GenApp.Parsers.Abstractions.Models;
 using GenApp.Parsers.Sql.Interfaces;
 
@@ -72,9 +73,22 @@ internal class SqlRowParser : ISqlRowParser
             TargetTable = match.Groups["TargetTable"].Value,
             SourceColumns = SplitBySeparator(match.Groups["SourceColumns"].Value, Constants.ComaSeparator),
             TargetColumns = SplitBySeparator(match.Groups["TargetColumns"].Value, Constants.ComaSeparator),
+            OnDeleteAction = DefineOnDeleteAction(columnLine),
         };
 
         return config;
+    }
+
+    private string? DefineOnDeleteAction(string columnLine)
+    {
+        string? onDeleteAction = null;
+        if (columnLine.Contains(Constants.OnDelete, StringComparison.OrdinalIgnoreCase))
+        {
+            onDeleteAction = SqlOnDeleteActions.All.FirstOrDefault(action =>
+                columnLine.Contains(action, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return onDeleteAction;
     }
 
     private bool IsForeignKey(string columnDefinition)

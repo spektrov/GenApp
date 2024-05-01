@@ -10,4 +10,6 @@ public class DotnetEntityRelationModel
     public bool IsRequired { get; set; }
 
     public bool IsReverted { get; set; }
+
+    public string OnDeleteAction { get; set; }
 }
