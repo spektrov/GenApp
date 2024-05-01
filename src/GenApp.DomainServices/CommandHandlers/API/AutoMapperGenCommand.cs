@@ -10,7 +10,7 @@ internal class AutoMapperGenCommand(IFileGenService fileGenService) : IGenComman
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var models = model.Entities.Select(x => new ApiMappingModelDto
+        var models = model.Entities.AddIdFilter().Select(x => new ApiMappingModelDto
         {
             CommandModelName = $"{x.EntityName}CommandModel",
             ModelName = $"{x.EntityName}Model",
@@ -27,7 +27,7 @@ internal class AutoMapperGenCommand(IFileGenService fileGenService) : IGenComman
             $"{model.AppName}.BLL.DomainModels",
         };
 
-        usings.AddRange(model.Entities.Select(x =>
+        usings.AddRange(model.Entities.AddIdFilter().Select(x =>
             $"{model.AppName}.API.Models.Requests.{x.EntityName}Requests"));
 
         await fileGenService.CreateEntryAsync(

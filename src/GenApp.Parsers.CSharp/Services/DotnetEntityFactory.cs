@@ -15,6 +15,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         var entities = tables.Select(table => new DotnetEntityConfigurationModel
         {
             EntityName = ToDotnetName(table.TableName),
+            HasId = table.Columns.Count(x => x.IsPrimaryKey) == 1,
             IdType = GetIdType(table, dbms),
             Table = GetTableInfo(table),
             Properties = table.Columns.SelectMany(column => MapToProperty(column, dbms)).ToList(),
@@ -27,7 +28,6 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
 
     private IEnumerable<DotnetPropertyConfigurationModel> MapToProperty(SqlColumnConfigurationModel column, DbmsType dbms)
     {
-        // TODO: handle when not simple PK - should not create id property
         var properties = new List<DotnetPropertyConfigurationModel>();
 
         var property = new DotnetPropertyConfigurationModel

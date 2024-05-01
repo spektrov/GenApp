@@ -15,7 +15,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
         await GenerateBaseRepositoryInterface(archive, model.AppName, token);
         await GenerateBaseRepositoryClass(archive, model.AppName, token);
 
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             await GenerateRepository(archive, entity, model.AppName, token);
         }

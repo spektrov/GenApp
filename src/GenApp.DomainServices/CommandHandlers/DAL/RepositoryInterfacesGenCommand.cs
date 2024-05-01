@@ -10,7 +10,7 @@ internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService, IC
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             var name = caseTransformer.ToPascalCase(entity.EntityName);
             var entityName = $"{name}Entity";

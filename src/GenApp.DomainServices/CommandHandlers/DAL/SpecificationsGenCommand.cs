@@ -12,7 +12,7 @@ internal class SpecificationsGenCommand(IFileGenService fileGenService) : IGenCo
     {
         await GenerateStaticModels(archive, model, token);
 
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             await GenerateSearchSpecifications(archive, entity, model.AppName, token);
             await GenerateFilterSpecifications(archive, entity, model.AppName, token);

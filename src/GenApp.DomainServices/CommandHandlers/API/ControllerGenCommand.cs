@@ -10,7 +10,7 @@ internal class ControllerGenCommand(IFileGenService fileGenService, ICaseTransfo
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             var plural = caseTransformer.ToPascalCase(caseTransformer.ToPlural(entity.EntityName));
             var fileName = $"Controllers/{plural}Controller.cs";

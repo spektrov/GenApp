@@ -5,6 +5,8 @@ public class DotnetEntityConfigurationModel
 
     public string? IdType { get; set; }
 
+    public bool HasId { get; set; }
+
     public SqlTableInfoModel Table { get; set; }
 
     public ICollection<DotnetPropertyConfigurationModel> Properties { get; set; }

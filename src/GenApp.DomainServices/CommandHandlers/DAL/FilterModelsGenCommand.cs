@@ -14,7 +14,7 @@ internal class FilterModelsGenCommand(IFileGenService fileGenService, ICaseTrans
     {
         await GenerateStaticModels(archive, model, token);
 
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             await GenerateSearchParameters(archive, entity, model.AppName, token);
             await GenerateFilterParameters(archive, entity, model.AppName, token);

@@ -11,7 +11,7 @@ internal class BootstrapGenCommand(IFileGenService fileGenService) : IGenCommand
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var injections = model.Entities.Select(entity => new InjectionDto
+        var injections = model.Entities.AddIdFilter().Select(entity => new InjectionDto
         {
             InterfaceName = $"I{entity.EntityName}Repository",
             ClassName = $"{entity.EntityName}Repository",

@@ -27,10 +27,10 @@ internal class SqlRowParser : ISqlRowParser
         return column;
     }
 
-    public SqlPrimaryKeyConfiguration GetSqlPrimaryKeyConfiguration(string pkDefenition)
+    public SqlPrimaryKeyConfiguration GetSqlPrimaryKeyConfiguration(string pkDefinition)
     {
-        var columnNames = pkDefenition != null
-            ? DefinePrimaryKeyColumn(pkDefenition)
+        var columnNames = pkDefinition != null
+            ? DefinePrimaryKeyColumn(pkDefinition)
             : Enumerable.Empty<string>();
 
         return new SqlPrimaryKeyConfiguration
