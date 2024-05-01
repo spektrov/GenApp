@@ -8,9 +8,12 @@ using GenApp.Templates.Resources.Models;
 namespace GenApp.DomainServices.CommandHandlers.BLL;
 internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransformer caseTransformer) : IGenCommand
 {
+    private IEnumerable<DotnetEntityConfigurationModel>? _entities;
+
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        _entities = model.Entities.AddIdFilter();
+        foreach (var entity in _entities)
         {
             var fileName = $"Services/{entity.EntityName}Service.cs";
 
@@ -27,7 +30,7 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
                     EntityName = $"{entity.EntityName}Entity",
                     CommandModelName = $"{entity.EntityName}CommandModel",
                     FindByIdSpecification = $"Find{entity.EntityName}ById",
-                    KeyType = entity.IdType,
+                    KeyType = entity.IdType!,
                     GetManyIncludes = GetManyIncludes(entity),
                     GetByIdIncludes = GetByIdIncludes(entity),
                     PropertiesForUpdate = GetPropertiesForUpdate(entity),
@@ -63,7 +66,7 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
 
     private ICollection<string> GetManyIncludes(DotnetEntityConfigurationModel entity)
     {
-        return GetIncludes(entity, x => x.Relation.IsOneToOne || x.Relation.IsReverted);
+        return GetIncludes(entity, x => x.Relation!.IsOneToOne);
     }
 
     private ICollection<string> GetByIdIncludes(DotnetEntityConfigurationModel entity)
@@ -74,8 +77,11 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
     private ICollection<string> GetIncludes(DotnetEntityConfigurationModel entity, Func<DotnetPropertyConfigurationModel, bool> predicate)
     {
         return entity.Properties
-            .Where(x => x.IsNavigation && x.Relation != null && predicate(x))
-            .Select(x => $"{entity.EntityName}Entity.{GetPropertyName(x.Name, x.Relation!.IsOneToOne || x.Relation.IsReverted)}")
+            .Where(x => x.IsNavigation
+                && x.Relation != null
+                && (_entities!.HasId(x.Relation.TargetEntity) || !x.IsNavigation)
+                && predicate(x))
+            .Select(x => $"{entity.EntityName}Entity.{GetPropertyName(x.Name, x.Relation!.IsOneToOne)}")
             .ToList();
     }
 

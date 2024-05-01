@@ -12,10 +12,10 @@ internal class DomainModelsGenCommand(IFileGenService fileGenService, IMapper ma
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             var properties = entity.Properties
-                .Where(x => !x.IsForeignRelation)
+                .Where(x => !x.IsForeignRelation && (model.Entities.HasId(x.Relation?.TargetEntity) || !x.IsNavigation))
                 .OrderByDescending(x => x.IsId)
                 .ThenBy(x => x.IsNavigation);
             var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties)
