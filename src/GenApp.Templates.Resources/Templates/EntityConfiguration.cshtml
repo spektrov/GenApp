@@ -7,7 +7,7 @@ namespace @Model.Namespace;
 public class @Model.ConfigurationName : IEntityTypeConfiguration<@Model.EntityName>
 {
     private const string TableName = "@Model.TableName";
-    @if(@Model.HasPK)
+    @if(Model.HasPK)
     {
     @:private const string IdColumn = "@Model.IdColumnName";
     }
@@ -29,5 +29,18 @@ public class @Model.ConfigurationName : IEntityTypeConfiguration<@Model.EntityNa
         {
         @:builder.Property(e => e.@columnConfig.PropertyName).HasColumnName(@columnConfig.ConfigName);
         }
+        @if (Model.RelationConfigs.Count > 0)
+        {
+            foreach (var relConfig in Model.RelationConfigs)
+            {
+        @:builder
+            @:.HasOne(e => e.@relConfig.NavigationPropertyName)
+            @:.@(relConfig.Cardinality)(e => e.@relConfig.RevertedPropertyName)
+            @:.HasForeignKey(e => e.@relConfig.ForeignPropertyName)
+            @:.IsRequired(@relConfig.IsRequired)
+            @:.OnDelete(DeleteBehavior.@relConfig.OnDeleteAction);
+            }
+        }
+
     }
 }

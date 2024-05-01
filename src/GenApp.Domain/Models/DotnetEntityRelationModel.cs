@@ -12,4 +12,8 @@ public class DotnetEntityRelationModel
     public bool IsReverted { get; set; }
 
     public string OnDeleteAction { get; set; }
+
+    public string ForeignPropertyName { get; set; }
+
+    public string RevertedPropertyName { get; set; }
 }

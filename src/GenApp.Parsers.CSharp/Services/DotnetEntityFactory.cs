@@ -52,6 +52,10 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
                 IsNavigation = true,
                 Relation = relationMapper.Map(column.Relation),
             };
+            if (navigationPropety.Relation is not null)
+            {
+                navigationPropety.Relation.ForeignPropertyName = property.Name;
+            }
 
             properties.Add(navigationPropety);
         }
@@ -124,6 +128,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
                             Relation = relationMapper.MapReverted(property.Relation),
                         };
                         targetEntity.Properties.Add(navigationProperty);
+                        property.Relation.RevertedPropertyName = navigationProperty.Name;
                     }
                 }
             }

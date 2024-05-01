@@ -21,4 +21,6 @@ public class EntityConfigurationModel : BaseTemplateModel, ICsharpClassModel
     public string IdColumnName { get; set; }
 
     public ICollection<ColumnConfigurationDto> ColumnConfigs { get; set; }
+
+    public ICollection<RelationConfigurationDto> RelationConfigs { get; set; }
 }

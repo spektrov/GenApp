@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using GenApp.Domain.Constants;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 using GenApp.DomainServices.Extensions;
@@ -102,7 +101,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
     private ICollection<RepositoryFilterDto> GetFilterParameters(DotnetEntityConfigurationModel entity)
     {
         var filterDtos = new List<RepositoryFilterDto>();
-        var filterProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Filter.Contains(x.Type));
+        var filterProperties = entity.Properties.AddFilter();
         if (filterProperties.Any())
         {
             filterDtos = filterProperties.Select(x => new RepositoryFilterDto
@@ -118,7 +117,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
     private ICollection<RepositoryFilterDto> GetSearchParameters(DotnetEntityConfigurationModel entity)
     {
         var searchDtos = new List<RepositoryFilterDto>();
-        var searchProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Search.Contains(x.Type));
+        var searchProperties = entity.Properties.AddSearchFilter();
         if (searchProperties.Any())
         {
             searchDtos = searchProperties.Select(x => new RepositoryFilterDto
@@ -134,7 +133,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
     private ICollection<RepositoryFilterDto> GetRangeParameters(DotnetEntityConfigurationModel entity)
     {
         var rangeDtos = new List<RepositoryFilterDto>();
-        var rangeProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Range.Contains(x.Type));
+        var rangeProperties = entity.Properties.AddRangeFilter();
         if (rangeProperties.Any())
         {
             rangeDtos = rangeProperties.Select(x => new RepositoryFilterDto
@@ -149,7 +148,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
 
     private ICollection<SortPropertyDto> GetSortParameters(DotnetEntityConfigurationModel entity)
     {
-        var sortProperties = entity.Properties.Where(x => !x.IsId && DotnetFilterTypes.Sort.Contains(x.Type));
+        var sortProperties = entity.Properties.AddSortFilter();
         var sortDtos = sortProperties.Select(x => new SortPropertyDto
         {
             SortName = x.Name,
