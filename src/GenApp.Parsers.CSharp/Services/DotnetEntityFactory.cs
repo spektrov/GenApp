@@ -15,6 +15,8 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         var entities = tables.Select(table => new DotnetEntityConfigurationModel
         {
             EntityName = ToDotnetName(table.TableName),
+            HasId = table.Columns.Count(x => x.IsPrimaryKey) == 1,
+            IdType = GetIdType(table, dbms),
             Table = GetTableInfo(table),
             Properties = table.Columns.SelectMany(column => MapToProperty(column, dbms)).ToList(),
         }).ToList();
@@ -26,13 +28,12 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
 
     private IEnumerable<DotnetPropertyConfigurationModel> MapToProperty(SqlColumnConfigurationModel column, DbmsType dbms)
     {
-        // TODO: handle when not simple PK - should not create id property
         var properties = new List<DotnetPropertyConfigurationModel>();
 
         var property = new DotnetPropertyConfigurationModel
         {
             Name = GetPropertyName(column),
-            Type = GetPropertyType(column, dbms),
+            Type = GetPropertyType(column.ColumnType, dbms),
             NotNull = column.NotNull,
             IsId = column.IsPrimaryKey,
             IsForeignRelation = column.IsForeignKey,
@@ -96,9 +97,9 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         return input.EndsWith("id", StringComparison.OrdinalIgnoreCase) ? input[..^2] : input;
     }
 
-    private string GetPropertyType(SqlColumnConfigurationModel column, DbmsType dbms)
+    private string GetPropertyType(string columnType, DbmsType dbms)
     {
-        return PropertyTypeMapper.Map(dbms, column.ColumnType);
+        return PropertyTypeMapper.Map(dbms, columnType);
     }
 
     private void AddRevertedNavigationProperties(IEnumerable<DotnetEntityConfigurationModel> entities)
@@ -139,10 +140,17 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         {
             var primaryKey = table.Columns.First(x => x.IsPrimaryKey);
             tableInfo.KeyName = primaryKey.ColumnName;
-            tableInfo.KeyType = primaryKey.ColumnType;
         }
 
         return tableInfo;
+    }
+
+    private string? GetIdType(SqlTableConfigurationModel table, DbmsType dbms)
+    {
+        var idType = table.Columns.FirstOrDefault(x => x.IsPrimaryKey)?.ColumnType;
+        return !string.IsNullOrEmpty(idType)
+            ? GetPropertyType(idType, dbms)
+            : default;
     }
 
     private string ToDotnetName(string tableName)

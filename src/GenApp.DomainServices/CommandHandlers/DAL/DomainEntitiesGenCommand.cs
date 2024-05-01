@@ -12,13 +12,16 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var usingList = new List<string> { $"{model.AppName}.DAL.Interfaces" };
         foreach (var entity in model.Entities)
         {
             var fileName = $"Entities/{entity.EntityName}Entity.cs";
-            var properties = entity.Properties.OrderByDescending(x => x.IsId).ThenBy(x => x.IsNavigation);
+            var properties = entity.Properties
+                .Where(x => model.Entities.HasId(x.Relation?.TargetEntity) || !x.IsNavigation)
+                .OrderByDescending(x => x.IsId)
+                .ThenBy(x => x.IsNavigation);
             var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties)
                 .Select(AdjustProperty).ToList();
+            var usingList = entity.HasId ? new[] { $"{model.AppName}.DAL.Interfaces" } : Array.Empty<string>();
 
             await fileGenService.CreateEntryAsync(
                 archive,
@@ -27,7 +30,8 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
                 {
                     Namespace = $"{model.AppName}.DAL.Entities",
                     EntityName = $"{entity.EntityName}Entity",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type,
+                    KeyType = entity.IdType,
+                    HasId = entity.HasId,
                     Properties = propertyDtos,
                     Usings = usingList,
                 },

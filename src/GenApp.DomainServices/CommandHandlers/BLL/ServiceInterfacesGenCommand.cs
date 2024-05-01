@@ -9,7 +9,7 @@ internal class ServiceInterfacesGenCommand(IFileGenService fileGenService) : IGe
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             var fileName = $"Interfaces/I{entity.EntityName}Service.cs";
 
@@ -22,7 +22,7 @@ internal class ServiceInterfacesGenCommand(IFileGenService fileGenService) : IGe
                     InterfaceName = $"I{entity.EntityName}Service",
                     ModelName = $"{entity.EntityName}Model",
                     CommandModelName = $"{entity.EntityName}CommandModel",
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
+                    KeyType = entity.IdType,
                     Usings = new List<string>
                     {
                         $"{model.AppName}.BLL.CommandModels",

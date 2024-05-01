@@ -14,5 +14,7 @@ public class DomainEntityModel : BaseTemplateModel, ICsharpClassModel
 
     public string KeyType { get; set; }
 
+    public bool HasId { get; set; }
+
     public ICollection<DotnetPropertyDto> Properties { get; set; }
 }

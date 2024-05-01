@@ -11,7 +11,7 @@ internal class CommandModelsGenCommand(IFileGenService fileGenService, IMapper m
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             var fileName = $"CommandModels/{entity.EntityName}CommandModel.cs";
             var properties = entity.Properties.Where(x => !x.IsNavigation).OrderByDescending(x => x.IsId);

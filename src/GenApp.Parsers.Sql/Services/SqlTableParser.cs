@@ -12,9 +12,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     public Result<IEnumerable<SqlTableConfigurationModel>> BuildTablesConfiguration(string sqlCreateTables)
     {
         // Split script into individual 'create table' statements
-        var preparedScript = PrepareSingleLineScript(sqlCreateTables);
-        var statements = Regex.Split(preparedScript, Constants.CreateTable, RegexOptions.IgnoreCase)
-            .Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim());
+        var statements = GetCreateTableStatements(sqlCreateTables);
 
         var tableConfigResults = statements.Select(BuildTableConfiguration).ToList();
 
@@ -51,10 +49,12 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 
         if (pkDefinition == null) return;
 
-        var primaryKey = sqlRowParser.GetSqlPrimaryKeyConfiguration(pkDefinition);
+        var pkConfiguration = sqlRowParser.GetSqlPrimaryKeyConfiguration(pkDefinition);
+
+        if (pkConfiguration == null || !pkConfiguration.HasPK) return;
 
         columns
-            .Where(column => primaryKey.SourceColumns.Any(col => col == column.ColumnName))
+            .Where(column => pkConfiguration.SourceColumns.Any(col => col == column.ColumnName))
             .ToList()
             .ForEach(column => column.IsPrimaryKey = true);
     }
@@ -82,6 +82,15 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
                 column.Relation = relation;
             }
         }
+    }
+
+    private IEnumerable<string> GetCreateTableStatements(string sqlCreateTables)
+    {
+        var preparedScript = PrepareSingleLineScript(sqlCreateTables);
+        var statements = Regex.Split(preparedScript, Constants.CreateTable, RegexOptions.IgnoreCase)
+             .Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim());
+
+        return statements;
     }
 
     private string PrepareSingleLineScript(string sqlCreateTables)

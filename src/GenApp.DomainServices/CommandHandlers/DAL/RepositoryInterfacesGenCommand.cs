@@ -10,7 +10,7 @@ internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService, IC
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             var name = caseTransformer.ToPascalCase(entity.EntityName);
             var entityName = $"{name}Entity";
@@ -23,7 +23,7 @@ internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService, IC
                 {
                     Name = $"I{name}Repository",
                     EntityName = entityName,
-                    KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
+                    KeyType = entity.IdType,
                     Namespace = $"{model.AppName}.DAL.Interfaces",
                     Usings = new[] { $"{model.AppName}.DAL.Entities" },
                 },

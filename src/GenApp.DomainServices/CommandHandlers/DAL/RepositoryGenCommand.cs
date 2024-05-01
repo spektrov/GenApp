@@ -15,7 +15,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
         await GenerateBaseRepositoryInterface(archive, model.AppName, token);
         await GenerateBaseRepositoryClass(archive, model.AppName, token);
 
-        foreach (var entity in model.Entities)
+        foreach (var entity in model.Entities.AddIdFilter())
         {
             await GenerateRepository(archive, entity, model.AppName, token);
         }
@@ -32,7 +32,7 @@ internal class RepositoryGenCommand(IFileGenService fileGenService, ICaseTransfo
                    RepositoryName = $"{entity.EntityName}Repository",
                    InterfaceName = $"I{entity.EntityName}Repository",
                    EntityName = $"{entity.EntityName}Entity",
-                   KeyType = entity.Properties.FirstOrDefault(x => x.IsId)?.Type ?? string.Empty,
+                   KeyType = entity.IdType,
                    FilterParametersName = $"{entity.EntityName}FilterParameters",
                    SearchParametersName = $"{entity.EntityName}SearchParameters",
                    RangeParametersName = $"{entity.EntityName}RangeParameters",

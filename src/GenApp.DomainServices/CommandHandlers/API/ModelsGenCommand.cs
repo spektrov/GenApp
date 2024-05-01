@@ -10,9 +10,12 @@ using GenApp.Templates.Resources.Models;
 namespace GenApp.DomainServices.CommandHandlers.API;
 internal class ModelsGenCommand(IFileGenService fileGenService, IMapper mapper, ICaseTransformer caseTransformer) : IGenCommand
 {
+    private IEnumerable<DotnetEntityConfigurationModel>? _entities;
+
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        foreach (var entity in model.Entities)
+        _entities = model.Entities.AddIdFilter();
+        foreach (var entity in _entities)
         {
             await GenerateEntityCreateRequest(archive, entity, model.AppName, token);
             await GenerateEntityUpdateRequest(archive, entity, model.AppName, token);
@@ -59,7 +62,7 @@ internal class ModelsGenCommand(IFileGenService fileGenService, IMapper mapper, 
     private Task GenerateEntityResponse(ZipArchive archive, DotnetEntityConfigurationModel entity, string appName, CancellationToken token)
     {
         var properties = entity.Properties
-            .Where(x => !x.IsForeignRelation)
+            .Where(x => !x.IsForeignRelation && (_entities!.HasId(x.Relation?.TargetEntity) || !x.IsNavigation))
             .OrderByDescending(x => x.IsId)
             .ThenBy(x => x.IsNavigation);
         var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties)

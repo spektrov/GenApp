@@ -37,7 +37,7 @@ internal class ConfigurationsGenCommand(IFileGenService fileGenService) : IGenCo
                 EntityName = $"{entity.EntityName}Entity",
                 TableName = entity.Table.Name,
                 IdColumnName = entity.Table.KeyName ?? string.Empty,
-                HasPK = entity.Properties.Any(x => x.IsId),
+                HasPK = entity.HasId,
                 ColumnConfigs = columnConfigs,
                 Usings = new[]
                 {
