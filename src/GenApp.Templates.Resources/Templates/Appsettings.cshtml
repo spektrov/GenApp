@@ -9,8 +9,8 @@
     "SqlConnectionString": "@Model.ConnectionString"
   },
   "CustomMigrator": {
-    "MigrationFolder": "../../db",
-    "MigrationHistoryFile": "../../db/0_migration_history.txt"
+    "MigrationFolder": "@Model.MigrationFolderPath",
+    "MigrationHistoryFile": "@Model.MigrationHistoryFilePath"
   },
   "AllowedHosts": "*"
 }

@@ -16,6 +16,8 @@ internal class AppsettingsGenCommand(IFileGenService fileGenService, IConnection
             new AppsettingsModel
             {
                 ConnectionString = BuildConnectionString(model, model.DbmsType),
+                MigrationFolderPath = model.UseDocker ? "/app/db" : "../../db",
+                MigrationHistoryFilePath = model.UseDocker ? "/app/db/0_migration_history.txt" : "../../db/0_migration_history.txt",
             },
             token);
     }
@@ -38,7 +40,7 @@ internal class AppsettingsGenCommand(IFileGenService fileGenService, IConnection
         {
             DbmsType.MYSQL => $"Server=localhost;Port=3306;Database={connection.DbName};Uid={connection.User};Pwd={connection.Password};",
             DbmsType.MSSQLSERVER => $"Server=localhost;Port=5433;Database={connection.DbName};User Id={connection.User};Password={connection.Password};",
-            DbmsType.POSTGRESQL => $"Host=localhost;Port=5432;Database={connection.DbName};Username={connection.User};Password={connection.Password};",
+            DbmsType.POSTGRESQL => $"Host=postgres-db;Port=5432;Database={connection.DbName};Username={connection.User};Password={connection.Password};",
             _ => throw new ArgumentException("Invalid DBMS type", nameof(dbmsType))
         };
 

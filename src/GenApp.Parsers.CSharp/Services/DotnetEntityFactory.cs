@@ -12,13 +12,17 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
     public Result<IEnumerable<DotnetEntityConfigurationModel>> Create(
         IEnumerable<SqlTableConfigurationModel> tables, DbmsType dbms)
     {
-        var entities = tables.Select(table => new DotnetEntityConfigurationModel
+        var entities = tables.Select(table =>
         {
-            EntityName = ToDotnetName(table.TableName),
-            HasId = table.Columns.Count(x => x.IsPrimaryKey) == 1,
-            IdType = GetIdType(table, dbms),
-            Table = GetTableInfo(table),
-            Properties = table.Columns.SelectMany(column => MapToProperty(column, dbms)).ToList(),
+            var hasId = table.Columns.Count(x => x.IsPrimaryKey) == 1;
+            return new DotnetEntityConfigurationModel
+            {
+                 EntityName = ToDotnetName(table.TableName),
+                 HasId = hasId,
+                 IdType = hasId ? GetIdType(table, dbms) : default,
+                 Table = GetTableInfo(table),
+                 Properties = table.Columns.SelectMany(column => MapToProperty(column, dbms, hasId)).ToList(),
+            };
         }).ToList();
 
         AddRevertedNavigationProperties(entities);
@@ -26,23 +30,24 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         return Result.Ok(entities.AsEnumerable());
     }
 
-    private IEnumerable<DotnetPropertyConfigurationModel> MapToProperty(SqlColumnConfigurationModel column, DbmsType dbms)
+    private IEnumerable<DotnetPropertyConfigurationModel> MapToProperty(
+        SqlColumnConfigurationModel column, DbmsType dbms, bool hasId)
     {
         var properties = new List<DotnetPropertyConfigurationModel>();
 
         var property = new DotnetPropertyConfigurationModel
         {
-            Name = GetPropertyName(column),
+            Name = GetPropertyName(column, hasId),
             Type = GetPropertyType(column.ColumnType, dbms),
-            NotNull = column.NotNull,
-            IsId = column.IsPrimaryKey,
+            NotNull = column.NotNull || (hasId && column.IsPrimaryKey),
+            IsId = hasId && column.IsPrimaryKey,
             IsForeignRelation = column.IsForeignKey,
             ColumnName = column.ColumnName,
         };
 
         properties.Add(property);
 
-        if (column.IsForeignKey && column.Relation is not null)
+        if (column.IsForeignKey && column.Relation is not null && hasId)
         {
             var navigationPropety = new DotnetPropertyConfigurationModel
             {
@@ -63,9 +68,9 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
         return properties;
     }
 
-    private string GetPropertyName(SqlColumnConfigurationModel column)
+    private string GetPropertyName(SqlColumnConfigurationModel column, bool hasId)
     {
-        if (column.IsPrimaryKey)
+        if (column.IsPrimaryKey && hasId)
         {
             return "Id";
         }
@@ -120,13 +125,17 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
                     var targetEntityName = ToDotnetName(property.Relation.TargetEntity);
                     if (entityLookup.TryGetValue(targetEntityName, out var targetEntity))
                     {
+                        if (!targetEntity.HasId) continue;
+
                         var navigationProperty = new DotnetPropertyConfigurationModel
                         {
-                            Name = GetRevertedNavigationPropertyName(entity.EntityName, targetEntityName, property.Name),
+                            Name = GetRevertedNavigationPropertyName(
+                                entity.EntityName, targetEntityName, property.Name),
                             Type = entity.EntityName,
                             IsNavigation = true,
                             Relation = relationMapper.MapReverted(property.Relation),
                         };
+
                         targetEntity.Properties.Add(navigationProperty);
                         property.Relation.RevertedPropertyName = navigationProperty.Name;
                     }

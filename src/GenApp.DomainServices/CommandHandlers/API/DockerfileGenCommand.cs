@@ -14,7 +14,7 @@ internal class DockerfileGenCommand(IFileGenService fileGenService) : IGenComman
             $"Dockerfile".ToApiProjectFile(model.AppName),
             new DockerfileModel
             {
-                SolutionName = $"{model.AppName}Solution",
+                SolutionName = $"{model.AppName}",
                 DotnetSdkVersion = $"{model.DotnetSdkVersion}.0"
             },
             token);
