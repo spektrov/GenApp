@@ -2,6 +2,7 @@
 public static class Constants
 {
     public const string CreateTable = "create table";
+    public const string IfNotExists = "if not exists";
     public const string ForeignKey = "foreign key";
     public const string References = "references";
     public const string Constraint = "constraint";
@@ -12,6 +13,7 @@ public static class Constants
     public const string OnDelete = "on delete";
     public const char ComaSeparator = ',';
     public const char SpaceSeparator = ' ';
+    public const char QuoteSeparator = '"';
     public const char OpenBracesSeparator = '(';
     public const char CloseBracesSeparator = ')';
     public const char SpecialSymbol = '>';

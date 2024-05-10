@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using GenApp.Parsers.Abstractions.Constants;
 using GenApp.Parsers.Abstractions.Models;
+using GenApp.Parsers.Sql.Extensions;
 using GenApp.Parsers.Sql.Interfaces;
 
 namespace GenApp.Parsers.Sql.Services;
@@ -19,7 +20,7 @@ internal class SqlRowParser : ISqlRowParser
 
         var column = new SqlColumnConfigurationModel
         {
-            ColumnName = columnComponents[0], // First component should be column name
+            ColumnName = columnComponents[0].GetNameWithoutQuotes(), // First component should be column name
             ColumnType = columnComponents[1], // Second component should be column type
             NotNull = DefineIfNotNull(columnLine),
             Unique = DefineIfUnique(columnLine),
@@ -76,11 +77,9 @@ internal class SqlRowParser : ISqlRowParser
 
         var config = new SqlRelationConfiguration
         {
-            TargetTable = match.Groups["TargetTable"].Value,
-            SourceColumns = SplitBySeparator(
-                match.Groups["SourceColumns"].Value, Constants.ComaSeparator),
-            TargetColumns = SplitBySeparator(
-                match.Groups["TargetColumns"].Value, Constants.ComaSeparator),
+            TargetTable = match.Groups["TargetTable"].Value.GetNameWithoutQuotes(),
+            SourceColumns = match.Groups["SourceColumns"].Value.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes()),
+            TargetColumns = match.Groups["TargetColumns"].Value.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes()),
             OnDeleteAction = DefineOnDeleteAction(columnLine),
         };
 
@@ -126,11 +125,11 @@ internal class SqlRowParser : ISqlRowParser
         if (defenition.StartsWith(Constants.PrimaryKey, StringComparison.OrdinalIgnoreCase)
                     || defenition.StartsWith(Constants.Constraint, StringComparison.OrdinalIgnoreCase))
         {
-            var pkColumns = GetValueInParenthesis(defenition);
-            return SplitBySeparator(pkColumns, Constants.ComaSeparator);
+            var pkColumns = GetValueInParenthesis(defenition) ?? string.Empty;
+            return pkColumns.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes());
         }
 
-        return SplitBySeparator(defenition, Constants.SpaceSeparator).Take(1);
+        return defenition.SplitBySeparator(Constants.SpaceSeparator).Select(x => x.GetNameWithoutQuotes()).Take(1);
     }
 
     private string? GetValueInParenthesis(string str)
@@ -145,12 +144,5 @@ internal class SqlRowParser : ISqlRowParser
         {
             return null;
         }
-    }
-
-    private IEnumerable<string> SplitBySeparator(string str, char separator)
-    {
-        return !string.IsNullOrWhiteSpace(str)
-            ? str.Split(separator).Select(c => c.Trim())
-            : Enumerable.Empty<string>();
     }
 }
