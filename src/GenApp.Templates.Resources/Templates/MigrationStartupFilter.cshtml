@@ -18,20 +18,35 @@ public class MigrationStartupFilter<TContext> : IStartupFilter
     {
         return app =>
         {
-            using (var scope = app.ApplicationServices.CreateScope())
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                foreach (var context in scope.ServiceProvider.GetServices<TContext>())
+                foreach(var context in scope.ServiceProvider.GetServices<TContext>())
                 {
+                    Console.WriteLine("Start processing DbContext");
                     if (context.Database.IsRelational())
                     {
-                        try
+                        var retryCount = 0;
+                        var maxRetries = 5;
+                        while (retryCount <= maxRetries)
                         {
-                            // context.Database.Migrate();
-                            Task.WaitAll(_dbMigrator.MigrateAsync(context, CancellationToken.None));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
+                            try
+                            {
+                                Console.WriteLine("Start apply migration");
+                                // context.Database.Migrate();
+                                Task.WaitAll(_dbMigrator.MigrateAsync(context, CancellationToken.None));
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                                if (retryCount == maxRetries)
+                                {
+                                    throw;
+                                }
+
+                                Console.WriteLine($"{e.Message}. Trying again in 10 seconds...");
+                                Thread.Sleep(10000);
+                                retryCount++;
+                            }
                         }
                     }
                 }

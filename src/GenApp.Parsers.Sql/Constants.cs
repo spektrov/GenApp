@@ -13,6 +13,8 @@ public static class Constants
     public const char ComaSeparator = ',';
     public const char SpaceSeparator = ' ';
     public const char OpenBracesSeparator = '(';
+    public const char CloseBracesSeparator = ')';
+    public const char SpecialSymbol = '>';
     public const string LineSeparator = "\n";
 
     public static readonly string[] Constraints =

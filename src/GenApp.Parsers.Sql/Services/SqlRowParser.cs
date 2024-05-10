@@ -47,9 +47,15 @@ internal class SqlRowParser : ISqlRowParser
             return default;
         }
 
-        var re1 = new Regex(@"FOREIGN KEY \((?<SourceColumns>[^\)]+)\) REFERENCES (?<TargetTable>\w+)\((?<TargetColumns>[^\)]+)\)");
-        var re2 = new Regex(@"(?<SourceColumns>\w+) \w+ REFERENCES (?<TargetTable>\w+)\((?<TargetColumns>[^\)]+)\)");
-        var re3 = new Regex(@"(?<SourceColumns>\w+) \w+ FOREIGN KEY REFERENCES (?<TargetTable>\w+)\((?<TargetColumns>[^\)]+)\)");
+        var re1 = new Regex(
+            @"(?i)FOREIGN\s+KEY\s*\((?<SourceColumns>[^\)]+)\)\s*REFERENCES\s*(?<TargetTable>\w+)\s*\((?<TargetColumns>[^\)]+)\)",
+            RegexOptions.Compiled);
+        var re2 = new Regex(
+            @"(?i)(?<SourceColumns>\w+)\s+\w+\s*REFERENCES\s*(?<TargetTable>\w+)\s*\((?<TargetColumns>[^\)]+)\)",
+            RegexOptions.Compiled);
+        var re3 = new Regex(
+            @"(?i)(?<SourceColumns>\w+)\s+\w+\s*FOREIGN\s+KEY\s*REFERENCES\s*(?<TargetTable>\w+)\s*\((?<TargetColumns>[^\)]+)\)",
+            RegexOptions.Compiled);
 
         Match match = re1.Match(columnLine);
 
@@ -71,8 +77,10 @@ internal class SqlRowParser : ISqlRowParser
         var config = new SqlRelationConfiguration
         {
             TargetTable = match.Groups["TargetTable"].Value,
-            SourceColumns = SplitBySeparator(match.Groups["SourceColumns"].Value, Constants.ComaSeparator),
-            TargetColumns = SplitBySeparator(match.Groups["TargetColumns"].Value, Constants.ComaSeparator),
+            SourceColumns = SplitBySeparator(
+                match.Groups["SourceColumns"].Value, Constants.ComaSeparator),
+            TargetColumns = SplitBySeparator(
+                match.Groups["TargetColumns"].Value, Constants.ComaSeparator),
             OnDeleteAction = DefineOnDeleteAction(columnLine),
         };
 

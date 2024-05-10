@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 using FluentResults;
 using GenApp.Parsers.Abstractions.Interfaces;
 using GenApp.Parsers.Abstractions.Models;
@@ -62,7 +63,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     private void AddForeignKeys(IEnumerable<SqlColumnConfigurationModel> columns, IEnumerable<string> definitions, string sourceTable)
     {
         var foreignKeys = definitions.Select(sqlRowParser.BuildRelationConfiguration);
-        var foreignKeysLookup = foreignKeys.Where(fk => fk is not null)
+        var foreignKeysLookup = foreignKeys.Where(fk => fk is not null && fk.SourceColumns.Count() == 1)
             .SelectMany(fk => fk.SourceColumns, (fk, sourceColumn) => new { sourceColumn, fk })
             .ToLookup(x => x.sourceColumn, x => x.fk);
 
@@ -70,8 +71,8 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
         {
             var relation = foreignKeysLookup[column.ColumnName].FirstOrDefault();
             var sameFKTable = relation is not null &&
-                foreignKeys.Where(fk => fk is not null)
-                .Any(x => x.TargetTable == relation.TargetTable && x.SourceColumns != relation.SourceColumns);
+                foreignKeys.Where(fk => fk is not null && fk.SourceColumns.Count() == 1)
+                .Any(x => x.TargetTable == relation.TargetTable && !x.SourceColumns.SequenceEqual(relation.SourceColumns));
             if (relation != null)
             {
                 column.IsForeignKey = true;
@@ -110,9 +111,42 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     {
         var otherItems = tableLine[tableNameLength..];
         var withoutBraces = otherItems.Trim().Substring(1, otherItems.Length - 3);
-        var definitions = withoutBraces
-            .Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
-            .Where(x => !string.IsNullOrWhiteSpace(x));
+        var replacedCommas = ReplaceCommasInBraces(withoutBraces, Constants.SpecialSymbol);
+
+        var definitions = replacedCommas.Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(def => def.Replace(Constants.SpecialSymbol, ','))
+            .ToList();
+
         return definitions;
+    }
+
+    private string ReplaceCommasInBraces(string input, char specialSymbol)
+    {
+        var buffer = new StringBuilder();
+        bool inParenthesis = false;
+
+        foreach (var ch in input)
+        {
+            if (ch == Constants.OpenBracesSeparator)
+            {
+                inParenthesis = true;
+            }
+            else if (ch == Constants.CloseBracesSeparator)
+            {
+                inParenthesis = false;
+            }
+
+            if (ch == Constants.ComaSeparator && inParenthesis)
+            {
+                buffer.Append(specialSymbol);
+            }
+            else
+            {
+                buffer.Append(ch);
+            }
+        }
+
+        return buffer.ToString();
     }
 }

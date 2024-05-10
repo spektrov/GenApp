@@ -10,7 +10,7 @@ public class ConnectionDetailsProvider : IConnectionDetailsProvider
     {
         return connectionDetails ??= new ConnectionDetailsModel
         {
-            User = "admin",
+            User = model.DbmsType == Domain.Enums.DbmsType.POSTGRESQL ? "postgres" : "admin",
             Password = Guid.NewGuid().ToString(),
             DbName = model.AppName.ToLower()
         };

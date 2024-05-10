@@ -137,8 +137,6 @@ public static class QueryableExtensions
             query = query.AsNoTracking();
         }
 
-        query = query.DefaultIfEmpty();
-
         var expression = specification.Expression as Expression<Func<TEntity?, bool>>;
         query = query.Where(expression);
 

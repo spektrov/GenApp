@@ -37,14 +37,13 @@ public class DockerComposeGenCommand(IFileGenService fileGenService, IConnection
         return new DockerComposeModel
         {
             DbServiceName = "postgres-db",
-            DbImageName = "postgres:15.1-alpine",
+            DbImageName = "postgres",
             DbPorts = "5432:5432",
-            VolumesValue = "~/apps/postgres:/var/lib/postgresql/data",
+            VolumesValue = "./data:/var/lib/postgresql/data",
             DockerProjectName = $"{appName}.API",
             EnvVariables = new List<VariableDto>
             {
                 new() { Name = "POSTGRES_PASSWORD", Value = $"{connection.Password}" },
-                new() { Name = "POSTGRES_USER", Value = $"{connection.User}" },
                 new() { Name = "POSTGRES_DB", Value = $"{connection.DbName}" },
             },
         };
