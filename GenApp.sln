@@ -36,6 +36,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Parsers.Abstractions
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.Parsers.CSharp", "src\GenApp.Parsers.Csharp\GenApp.Parsers.CSharp.csproj", "{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E642B03E-3305-418F-B8C6-6A72F425DDD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenApp.DomainServices.Tests", "tests\GenApp.DomainServices.Tests\GenApp.DomainServices.Tests.csproj", "{25094C05-976A-4054-AC43-34F6B195C181}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +82,10 @@ Global
 		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25094C05-976A-4054-AC43-34F6B195C181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25094C05-976A-4054-AC43-34F6B195C181}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25094C05-976A-4054-AC43-34F6B195C181}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25094C05-976A-4054-AC43-34F6B195C181}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +100,7 @@ Global
 		{5DEEEA34-FF99-4F47-BB4F-D08E7AA41C7B} = {50277B5B-5EC2-4A5C-9CBC-5404F819018F}
 		{6F4856F3-9BA7-4053-8B73-570E6E25CC17} = {50277B5B-5EC2-4A5C-9CBC-5404F819018F}
 		{3951659C-B12F-4F9B-AD22-8DB80F8A11D3} = {50277B5B-5EC2-4A5C-9CBC-5404F819018F}
+		{25094C05-976A-4054-AC43-34F6B195C181} = {E642B03E-3305-418F-B8C6-6A72F425DDD0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FD9D745-6FB8-4540-A378-861CD604080E}
