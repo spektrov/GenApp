@@ -1,6 +1,7 @@
 <Project>
   <ItemGroup>
     <!-- Tests -->
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.4" />
     <PackageVersion Include="xunit" Version="2.5.1" />
     <PackageVersion Include="NSubstitute" Version="5.1.0" />
     <PackageVersion Include="AutoFixture" Version="4.18.0" />
