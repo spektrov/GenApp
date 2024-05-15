@@ -19,4 +19,8 @@
 		<PackageReference Include="FluentAssertions" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\GenApp.Parsers.Csharp\GenApp.Parsers.CSharp.csproj" />
+	</ItemGroup>
+
 </Project>
