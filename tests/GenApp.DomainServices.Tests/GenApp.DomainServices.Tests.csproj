@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\GenApp.DomainServices\GenApp.DomainServices.csproj" />
+    <ProjectReference Include="..\..\src\GenApp.Parsers.Csharp\GenApp.Parsers.CSharp.csproj" />
   </ItemGroup>
 
 </Project>
