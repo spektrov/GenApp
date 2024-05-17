@@ -7,8 +7,7 @@ using GenApp.Templates.Resources.Models;
 namespace GenApp.DomainServices.CommandHandlers.BLL;
 internal class ServiceInterfacesGenCommand(IFileGenService fileGenService) : IGenCommand
 {
-    public async Task ExecuteAsync(
-        ZipArchive archive, ApplicationDataModel model, CancellationToken token)
+    public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
         foreach (var entity in model.Entities.AddIdFilter())
         {

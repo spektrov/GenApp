@@ -17,6 +17,9 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
         {
             var fileName = $"Services/{entity.EntityName}Service.cs";
 
+            var getManyIncludes = GetManyIncludes(entity);
+            var getByIdIncludes = GetByIdIncludes(entity);
+
             await fileGenService.CreateEntryAsync(
                 archive,
                 fileName.ToBllProjectFile(model.AppName),
@@ -31,8 +34,8 @@ internal class ServicesGenCommand(IFileGenService fileGenService, ICaseTransform
                     CommandModelName = $"{entity.EntityName}CommandModel",
                     FindByIdSpecification = $"Find{entity.EntityName}ById",
                     KeyType = entity.IdType!,
-                    GetManyIncludes = GetManyIncludes(entity),
-                    GetByIdIncludes = GetByIdIncludes(entity),
+                    GetManyIncludes = getManyIncludes,
+                    GetByIdIncludes = getByIdIncludes,
                     PropertiesForUpdate = GetPropertiesForUpdate(entity),
                     Usings = new List<string>
                     {
