@@ -79,7 +79,7 @@ public class AutoMapperGenCommandTests
                 Arg.Is<BllAutoMapperModel>(x =>
                     x.Namespace == mapperModel.Namespace &&
                     x.Usings!.SequenceEqual(mapperModel.Usings) &&
-                    x.Models.SequenceEqual(mapperModel.Models)),
+                    x.Models.SequenceEqual(mapperModel.Models, new ReflectionObjectEqualityComparer<BllMappingModelDto>())),
                 Arg.Any<CancellationToken>());
     }
 }

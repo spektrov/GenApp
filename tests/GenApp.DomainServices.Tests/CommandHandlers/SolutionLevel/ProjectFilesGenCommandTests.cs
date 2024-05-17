@@ -55,7 +55,7 @@ public class ProjectFilesGenCommandTests
                 Arg.Is<ProjectFileModel>(x =>
                     x.Type == fileModel.Type &&
                     x.SdkVersion == fileModel.SdkVersion &&
-                    x.Packages!.SequenceEqual(fileModel.Packages)),
+                    x.Packages!.SequenceEqual(fileModel.Packages, new ReflectionObjectEqualityComparer<PackageDto>())),
                 Arg.Any<CancellationToken>());
     }
 
@@ -92,7 +92,7 @@ public class ProjectFilesGenCommandTests
                 Arg.Is<ProjectFileModel>(x =>
                     x.Type == fileModel.Type &&
                     x.SdkVersion == fileModel.SdkVersion &&
-                    x.Packages!.SequenceEqual(fileModel.Packages) &&
+                    x.Packages!.SequenceEqual(fileModel.Packages, new ReflectionObjectEqualityComparer<PackageDto>()) &&
                     x.Includes!.SequenceEqual(fileModel.Includes)),
                 Arg.Any<CancellationToken>());
     }
@@ -131,7 +131,7 @@ public class ProjectFilesGenCommandTests
                 Arg.Is<ProjectFileModel>(x =>
                     x.Type == fileModel.Type &&
                     x.SdkVersion == fileModel.SdkVersion &&
-                    x.Packages!.SequenceEqual(fileModel.Packages) &&
+                    x.Packages!.SequenceEqual(fileModel.Packages, new ReflectionObjectEqualityComparer<PackageDto>()) &&
                     x.Includes!.SequenceEqual(fileModel.Includes)),
                 Arg.Any<CancellationToken>());
     }

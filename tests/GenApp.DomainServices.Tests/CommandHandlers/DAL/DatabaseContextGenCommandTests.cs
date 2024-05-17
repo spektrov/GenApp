@@ -84,7 +84,7 @@ public class DatabaseContextGenCommandTests
                 Arg.Is<DatabaseContextModel>(x =>
                     x.Namespace == contextModel.Namespace &&
                     x.Usings.SequenceEqual(contextModel.Usings) &&
-                    x.Sets.SequenceEqual(contextModel.Sets)),
+                    x.Sets.SequenceEqual(contextModel.Sets, new ReflectionObjectEqualityComparer<DbSetDto>())),
                 Arg.Any<CancellationToken>());
     }
 }

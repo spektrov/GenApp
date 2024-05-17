@@ -71,7 +71,7 @@ public class BootstrapGenCommandTests
                     x.Namespace == bootstrapModel.Namespace &&
                     x.DbmsUsage == bootstrapModel.DbmsUsage &&
                     x.Usings.SequenceEqual(bootstrapModel.Usings) &&
-                    x.Injections.SequenceEqual(bootstrapModel.Injections)),
+                    x.Injections.SequenceEqual(bootstrapModel.Injections, new ReflectionObjectEqualityComparer<InjectionDto>())),
                 Arg.Any<CancellationToken>());
     }
 }

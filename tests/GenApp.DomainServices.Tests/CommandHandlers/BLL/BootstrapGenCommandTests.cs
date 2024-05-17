@@ -86,7 +86,7 @@ public class BootstrapGenCommandTests
                 Arg.Is<BllBootstrapModel>(x =>
                     x.Namespace == bootstrapModel.Namespace &&
                     x.Usings!.SequenceEqual(bootstrapModel.Usings) &&
-                    x.Injections.SequenceEqual(bootstrapModel.Injections)),
+                    x.Injections.SequenceEqual(bootstrapModel.Injections, new ReflectionObjectEqualityComparer<InjectionDto>())),
                 Arg.Any<CancellationToken>());
     }
 }

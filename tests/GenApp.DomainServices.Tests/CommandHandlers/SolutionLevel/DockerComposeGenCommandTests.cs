@@ -68,7 +68,7 @@ public class DockerComposeGenCommandTests
                     x.DbPorts == dockerFile.DbPorts &&
                     x.VolumesValue == dockerFile.VolumesValue &&
                     x.DockerProjectName == dockerFile.DockerProjectName &&
-                    x.EnvVariables.SequenceEqual(dockerFile.EnvVariables)),
+                    x.EnvVariables.SequenceEqual(dockerFile.EnvVariables, new ReflectionObjectEqualityComparer<VariableDto>())),
                 Arg.Any<CancellationToken>());
     }
 
@@ -115,7 +115,7 @@ public class DockerComposeGenCommandTests
                     x.DbPorts == dockerFile.DbPorts &&
                     x.VolumesValue == dockerFile.VolumesValue &&
                     x.DockerProjectName == dockerFile.DockerProjectName &&
-                    x.EnvVariables.SequenceEqual(dockerFile.EnvVariables)),
+                    x.EnvVariables.SequenceEqual(dockerFile.EnvVariables, new ReflectionObjectEqualityComparer<VariableDto>())),
                 Arg.Any<CancellationToken>());
     }
 
