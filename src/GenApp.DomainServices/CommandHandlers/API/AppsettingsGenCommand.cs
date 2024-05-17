@@ -15,14 +15,14 @@ internal class AppsettingsGenCommand(IFileGenService fileGenService, IConnection
             $"appsettings.json".ToApiProjectFile(model.AppName),
             new AppsettingsModel
             {
-                ConnectionString = BuildConnectionString(model, model.DbmsType),
+                ConnectionString = BuildConnectionString(model),
                 MigrationFolderPath = model.UseDocker ? "/app/db" : "../../db",
                 MigrationHistoryFilePath = model.UseDocker ? "/app/db/0_migration_history.txt" : "../../db/0_migration_history.txt",
             },
             token);
     }
 
-    private string BuildConnectionString(ApplicationDataModel model, DbmsType dbmsType)
+    private string BuildConnectionString(ApplicationDataModel model)
     {
         if (!model.UseDocker && string.IsNullOrEmpty(model.ConnectionString))
         {
@@ -35,15 +35,29 @@ internal class AppsettingsGenCommand(IFileGenService fileGenService, IConnection
         }
 
         var connection = connectionProvider.Get(model);
+        var serverName = GetServerName(model);
 
-        string connStr = dbmsType switch
+        string connStr = model.DbmsType switch
         {
-            DbmsType.MYSQL => $"Server=localhost;Port=3306;Database={connection.DbName};Uid={connection.User};Pwd={connection.Password};",
-            DbmsType.MSSQLSERVER => $"Server=localhost;Port=5433;Database={connection.DbName};User Id={connection.User};Password={connection.Password};",
-            DbmsType.POSTGRESQL => $"Host=postgres-db;Port=5432;Database={connection.DbName};Username={connection.User};Password={connection.Password};",
-            _ => throw new ArgumentException("Invalid DBMS type", nameof(dbmsType))
+            DbmsType.MYSQL => $"Server={serverName};Port=3306;Database={connection.DbName};Uid={connection.User};Pwd={connection.Password};",
+            DbmsType.MSSQLSERVER => $"Server={serverName};Port=5433;Database={connection.DbName};User Id={connection.User};Password={connection.Password};",
+            DbmsType.POSTGRESQL => $"Host={serverName};Port=5432;Database={connection.DbName};Username={connection.User};Password={connection.Password};",
+            _ => throw new ArgumentException("Invalid DBMS type", nameof(model.DbmsType))
         };
 
         return connStr;
+    }
+
+    private string GetServerName(ApplicationDataModel model)
+    {
+        var serverName = model.DbmsType switch
+        {
+            DbmsType.MYSQL => model.UseDocker ? "mysql-db" : "localhost",
+            DbmsType.MSSQLSERVER => "localhost",
+            DbmsType.POSTGRESQL => model.UseDocker ? "postgres-db" : "localhost",
+            _ => throw new ArgumentException("Invalid DBMS type", nameof(model.DbmsType))
+        };
+
+        return serverName;
     }
 }
