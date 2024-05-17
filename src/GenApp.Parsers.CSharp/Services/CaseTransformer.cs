@@ -45,21 +45,6 @@ internal class CaseTransformer : ICaseTransformer
     }
 
     /// <summary>
-    /// Transforms string into PascalCase.
-    /// </summary>
-    /// <param name="str">Input string.</param>
-    /// <returns>Transformed string.</returns>
-    public string ToPascalCase(string str)
-    {
-        if (string.IsNullOrWhiteSpace(str)) return str;
-
-        str = str.Equals(str.ToUpper()) ? str.ToLower() : str;
-
-        var transformed = new string(str.Select((ch, i) => TransformPascal(str, i)).ToArray());
-        return new string(transformed.Where(IsValid).ToArray());
-    }
-
-    /// <summary>
     /// Transforms string to it's English plural form.
     /// </summary>
     /// <param name="str">Input string.</param>
@@ -89,6 +74,21 @@ internal class CaseTransformer : ICaseTransformer
         return !string.IsNullOrWhiteSpace(other)
             ? $"{other}_{last}"
             : last;
+    }
+
+    /// <summary>
+    /// Transforms string into PascalCase.
+    /// </summary>
+    /// <param name="str">Input string.</param>
+    /// <returns>Transformed string.</returns>
+    public string ToPascalCase(string str)
+    {
+        if (string.IsNullOrWhiteSpace(str)) return str;
+
+        str = str.Equals(str.ToUpper()) ? str.ToLower() : str;
+
+        var transformed = new string(str.Select((ch, i) => TransformPascal(str, i)).ToArray());
+        return new string(transformed.Where(IsValid).ToArray());
     }
 
     private static bool IsValid(char ch)

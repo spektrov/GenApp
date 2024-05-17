@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using GenApp.Domain.Constants;
 using GenApp.Domain.Enums;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
@@ -12,15 +13,12 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
-        var dllType = "Microsoft.NET.Sdk";
-        var webType = "Microsoft.NET.Sdk.Web";
-
         await fileGenService.CreateEntryAsync(
             archive,
             $"{model.AppName}.DAL.csproj".ToDalProjectFile(model.AppName),
             new ProjectFileModel
             {
-                Type = dllType,
+                Type = ProjectTypes.DllType,
                 SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
                 Packages = new List<PackageDto>
                 {
@@ -35,7 +33,7 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
             $"{model.AppName}.BLL.csproj".ToBllProjectFile(model.AppName),
             new ProjectFileModel
             {
-                Type = dllType,
+                Type = ProjectTypes.DllType,
                 SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
                 Packages = new List<PackageDto>
                 {
@@ -53,7 +51,7 @@ internal class ProjectFilesGenCommand(IFileGenService fileGenService) : IGenComm
             $"{model.AppName}.API.csproj".ToApiProjectFile(model.AppName),
             new ProjectFileModel
             {
-                Type = webType,
+                Type = ProjectTypes.WebType,
                 SdkVersion = BuildNetSdkVersion(model.DotnetSdkVersion),
                 Packages = new List<PackageDto>
                 {

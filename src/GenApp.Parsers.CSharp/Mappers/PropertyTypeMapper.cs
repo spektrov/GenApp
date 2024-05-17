@@ -7,7 +7,7 @@ public static class PropertyTypeMapper
 {
     public static string Map(DbmsType dbmsType, string sqlType)
     {
-        var regex = new Regex(@"\w+");
+        var regex = new Regex(@"^[A-Za-z]+$");
 
         var match = regex.Match(sqlType);
         if (!match.Success)

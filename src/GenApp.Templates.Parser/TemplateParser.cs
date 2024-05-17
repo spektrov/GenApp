@@ -33,7 +33,19 @@ public class TemplateParser : ITemplateParser
 
     private static string GetTemplatePath(string templateName)
     {
-        var templatesDirectory = @"..\GenApp.Templates.Resources\Templates";
+        var projectDir = new DirectoryInfo(AppContext.BaseDirectory);
+        for (var i = 0; i < 5; i++)
+        {
+            projectDir = projectDir?.Parent;
+        }
+
+        if (projectDir == null)
+        {
+            throw new DirectoryNotFoundException("Unable to navigate up five directories.");
+        }
+
+        var projectRoot = projectDir.FullName;
+        var templatesDirectory = Path.Join(projectRoot, "src\\GenApp.Templates.Resources\\Templates");
         var templateFile = $"{templateName}.cshtml";
 
         return Path.Combine(templatesDirectory, templateFile);

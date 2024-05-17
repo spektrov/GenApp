@@ -21,7 +21,7 @@ public class DockerComposeGenCommand(IFileGenService fileGenService, IConnection
         var dockerModel = model.DbmsType switch
         {
             DbmsType.MYSQL => GetForMySql(model.AppName, connection),
-            DbmsType.POSTGRESQL => GetForPosgreSql(model.AppName, connection),
+            DbmsType.POSTGRESQL => GetForPostgreSql(model.AppName, connection),
             _ => throw new ArgumentException("Invalid DBMS type"),
         };
 
@@ -32,7 +32,7 @@ public class DockerComposeGenCommand(IFileGenService fileGenService, IConnection
             token);
     }
 
-    private DockerComposeModel GetForPosgreSql(string appName, ConnectionDetailsModel connection)
+    private DockerComposeModel GetForPostgreSql(string appName, ConnectionDetailsModel connection)
     {
         return new DockerComposeModel
         {

@@ -13,4 +13,10 @@
     <ProjectReference Include="..\GenApp.Templates.Resources\GenApp.Templates.Resources.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>GenApp.DomainServices.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
 </Project>

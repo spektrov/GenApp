@@ -123,11 +123,13 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
     {
         var otherItems = tableLine[tableNameLength..];
 
-        var braceIndex = otherItems.IndexOf(Constants.OpenBracesSeparator);
-        otherItems = braceIndex > 0 ? otherItems[braceIndex..] : otherItems;
+        var openBraceIndex = otherItems.IndexOf(Constants.OpenBracesSeparator);
+        otherItems = openBraceIndex > 0 ? otherItems[(openBraceIndex + 1)..] : otherItems;
 
-        var withoutBraces = otherItems.Trim().Substring(1, otherItems.Length - 3);
-        var replacedCommas = ReplaceCommasInBraces(withoutBraces, Constants.SpecialSymbol);
+        var closeBraceIndex = otherItems.LastIndexOf(Constants.CloseBracesSeparator);
+        otherItems = closeBraceIndex > 0 ? otherItems[..closeBraceIndex] : otherItems;
+
+        var replacedCommas = ReplaceCommasInBraces(otherItems, Constants.SpecialSymbol);
 
         var definitions = replacedCommas.Split(Constants.ComaSeparator, StringSplitOptions.TrimEntries)
             .Where(x => !string.IsNullOrWhiteSpace(x))

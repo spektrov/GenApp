@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using FluentResults;
+﻿using FluentResults;
 using GenApp.Domain.Interfaces;
 using GenApp.Domain.Models;
 using GenApp.Parsers.Abstractions.Interfaces;
@@ -14,6 +13,11 @@ public class ApplicationDataModelMapper(
 {
     public Result<ApplicationDataModel> Map(ApplicationDataModel settingsModel)
     {
+        if (string.IsNullOrEmpty(settingsModel.SqlTableScript))
+        {
+            return Result.Fail("SQL script is not provided");
+        }
+
         var applicationData = settingsModel;
         applicationData.AppName = GetAppName(settingsModel.AppName);
 
@@ -30,7 +34,6 @@ public class ApplicationDataModelMapper(
     private string GetAppName(string appName)
     {
         var noSpace = appName.Replace(" ", string.Empty);
-        var dotUsage = Regex.Replace(noSpace, "[^a-zA-Z0-9]", ".");
-        return caseTransformer.ToPascalCase(dotUsage);
+        return caseTransformer.ToPascalCase(noSpace);
     }
 }

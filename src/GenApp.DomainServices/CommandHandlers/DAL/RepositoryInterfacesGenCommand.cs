@@ -10,6 +10,8 @@ internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService, IC
 {
     public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
+        await GenerateBaseRepositoryInterface(archive, model.AppName, token);
+
         foreach (var entity in model.Entities.AddIdFilter())
         {
             var name = caseTransformer.ToPascalCase(entity.EntityName);
@@ -29,5 +31,25 @@ internal class RepositoryInterfacesGenCommand(IFileGenService fileGenService, IC
                 },
                 token);
         }
+    }
+
+    private Task GenerateBaseRepositoryInterface(ZipArchive archive, string appName, CancellationToken token)
+    {
+        return fileGenService.CreateEntryAsync(
+           archive,
+           "Interfaces/IRepositoryBase.cs".ToDalProjectFile(appName),
+           new RepositoryBaseInterfaceModel
+           {
+               Namespace = $"{appName}.DAL.Interfaces",
+               Usings = new[]
+               {
+                   "System.Linq.Expressions",
+                   "Microsoft.EntityFrameworkCore",
+                   $"{appName}.DAL.Enums",
+                   $"{appName}.DAL.Models",
+                   $"{appName}.DAL.Specifications",
+               }.Order(),
+           },
+           token);
     }
 }
