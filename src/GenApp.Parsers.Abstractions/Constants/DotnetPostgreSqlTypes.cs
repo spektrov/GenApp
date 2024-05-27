@@ -11,7 +11,7 @@ public static class DotnetPostgreSqlTypes
         { DotnetTypes.Int, new[] { PostgreSqlTypes.Int, PostgreSqlTypes.Serial } },
         { DotnetTypes.Long, new[] { PostgreSqlTypes.Bigint } },
         { DotnetTypes.Float, new[] { PostgreSqlTypes.Real } },
-        { DotnetTypes.Decimal, new[] { PostgreSqlTypes.Decimal } },
+        { DotnetTypes.Decimal, new[] { PostgreSqlTypes.Decimal, PostgreSqlTypes.Numeric } },
         { DotnetTypes.ByteArray, new[] { PostgreSqlTypes.Bytea } },
         { DotnetTypes.Guid, new[] { PostgreSqlTypes.Uuid } },
         { DotnetTypes.DateTime, new[] { PostgreSqlTypes.Timestamp, PostgreSqlTypes.TimestampTZ, PostgreSqlTypes.Date } },

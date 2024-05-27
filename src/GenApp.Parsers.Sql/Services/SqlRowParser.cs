@@ -20,10 +20,11 @@ internal class SqlRowParser : ISqlRowParser
 
         var column = new SqlColumnConfigurationModel
         {
-            ColumnName = columnComponents[0].GetNameWithoutQuotes(), // First component should be column name
+            ColumnName = columnComponents[0].GetNameWithoutQuotes(true), // First component should be column name
             ColumnType = columnComponents[1], // Second component should be column type
             NotNull = DefineIfNotNull(columnLine),
             Unique = DefineIfUnique(columnLine),
+            KeepCase = columnComponents[0].ValueInQuotes(),
         };
 
         return column;
@@ -77,9 +78,9 @@ internal class SqlRowParser : ISqlRowParser
 
         var config = new SqlRelationConfiguration
         {
-            TargetTable = match.Groups["TargetTable"].Value.GetNameWithoutQuotes(),
-            SourceColumns = match.Groups["SourceColumns"].Value.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes()),
-            TargetColumns = match.Groups["TargetColumns"].Value.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes()),
+            TargetTable = match.Groups["TargetTable"].Value.GetNameWithoutQuotes(true),
+            SourceColumns = match.Groups["SourceColumns"].Value.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes(true)),
+            TargetColumns = match.Groups["TargetColumns"].Value.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes(true)),
             OnDeleteAction = DefineOnDeleteAction(columnLine),
         };
 
@@ -126,10 +127,10 @@ internal class SqlRowParser : ISqlRowParser
                     || defenition.StartsWith(Constants.Constraint, StringComparison.OrdinalIgnoreCase))
         {
             var pkColumns = GetValueInParenthesis(defenition) ?? string.Empty;
-            return pkColumns.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes());
+            return pkColumns.SplitBySeparator(Constants.ComaSeparator).Select(x => x.GetNameWithoutQuotes(true));
         }
 
-        return defenition.SplitBySeparator(Constants.SpaceSeparator).Select(x => x.GetNameWithoutQuotes()).Take(1);
+        return defenition.SplitBySeparator(Constants.SpaceSeparator).Select(x => x.GetNameWithoutQuotes(true)).Take(1);
     }
 
     private string? GetValueInParenthesis(string str)

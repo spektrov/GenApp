@@ -25,6 +25,7 @@ internal class BootstrapGenCommand(IFileGenService fileGenService) : IGenCommand
                 DbmsUsage = GetDbmsUsageMethod(model.DbmsType),
                 Injections = injections,
                 Namespace = $"{model.AppName}.DAL",
+                IsMySql = model.DbmsType == DbmsType.MYSQL,
                 Usings = new[]
                 {
                     "Microsoft.EntityFrameworkCore",

@@ -88,7 +88,7 @@ export class GenappPageComponent {
 
   private fileValidator(file: File): boolean {
     const valid = file &&
-    ['text/plain', 'application/sql'].includes(file.type) &&
+    (file.name.endsWith('.txt') || file.name.endsWith('.sql')) &&
     file.size <= 100000;
 
     return valid;

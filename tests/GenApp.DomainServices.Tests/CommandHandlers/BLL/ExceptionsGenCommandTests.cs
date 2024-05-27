@@ -25,10 +25,13 @@ public class ExceptionsGenCommandTests
     [Fact]
     public async Task ExecuteAsync_should_call_CreateEntryAsync_with_correct_parameters()
     {
+        // Arrange
         var model = _fixture.Create<ApplicationDataModel>();
 
+        // Act
         await _sut.ExecuteAsync(_archive, model, default);
 
+        // Assert
         await _fileGenService
             .Received(1)
             .CreateEntryAsync(

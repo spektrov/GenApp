@@ -10,7 +10,8 @@ public static class PostgreSqlTypes
     public const string Int = "integer";
     public const string Serial = "serial";
     public const string Bigint = "bigint";
-    public const string Decimal = "numeric";
+    public const string Numeric = "numeric";
+    public const string Decimal = "decimal";
     public const string Real = "real";
     public const string Timestamp = "timestamp";
     public const string TimestampTZ = "timestamptz";

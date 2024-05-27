@@ -14,7 +14,9 @@ public static class Bootstrap
 
     private static void AddSqlContext(this IServiceCollection services, IConfiguration configuration) =>
         services.AddDbContext<DatabaseContext>(opts =>
-            opts.@(Model.DbmsUsage)(configuration.GetConnectionString("SqlConnectionString")!));
+            opts.@(Model.DbmsUsage)(
+                configuration.GetConnectionString("SqlConnectionString")!@if(Model.IsMySql) @:, new MySqlServerVersion(new Version())
+            ));
 
     private static void AddRepositories(this IServiceCollection services)
     {

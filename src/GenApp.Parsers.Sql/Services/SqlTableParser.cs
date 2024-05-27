@@ -9,7 +9,7 @@ using GenApp.Parsers.Sql.Interfaces;
 namespace GenApp.Parsers.Sql.Services;
 internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 {
-    private static readonly string NotPropertyPattern = @"\,\d+|[\)\(;]|\b\d+\b|[\n]";
+    private static readonly string NotPropertyPattern = @"\,\s*\d+|[\)\(;]|\b\d+\b|[\n]";
 
     public Result<IEnumerable<SqlTableConfigurationModel>> BuildTablesConfiguration(string sqlCreateTables)
     {
@@ -25,7 +25,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
 
     private Result<SqlTableConfigurationModel> BuildTableConfiguration(string tableLine)
     {
-        var tableName = GetTableName(tableLine);
+        var (tableName, keepCase) = GetTableName(tableLine);
         var definitions = ToTableDefinitions(tableLine, tableName.Length);
 
         var columns = definitions
@@ -40,6 +40,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
         return new SqlTableConfigurationModel
         {
             TableName = tableName,
+            KeepCase = keepCase,
             Columns = columns,
         };
     }
@@ -86,13 +87,17 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
         }
     }
 
-    private string GetTableName(string tableLine)
+    private (string, bool) GetTableName(string tableLine)
     {
-        return tableLine
+        var rawName = tableLine
             .Split(Constants.OpenBracesSeparator, StringSplitOptions.RemoveEmptyEntries)
             .First()
-            .Trim()
-            .GetNameWithoutQuotes();
+            .Trim();
+
+        var name = rawName.GetNameWithoutQuotes(true);
+        var keepCase = rawName.ValueInQuotes();
+
+        return (name, keepCase);
     }
 
     private IEnumerable<string> GetCreateTableStatements(string sqlCreateTables)
@@ -124,7 +129,7 @@ internal class SqlTableParser(ISqlRowParser sqlRowParser) : ISqlTableParser
         var otherItems = tableLine[tableNameLength..];
 
         var openBraceIndex = otherItems.IndexOf(Constants.OpenBracesSeparator);
-        otherItems = openBraceIndex > 0 ? otherItems[(openBraceIndex + 1)..] : otherItems;
+        otherItems = openBraceIndex >= 0 ? otherItems[(openBraceIndex + 1)..] : otherItems;
 
         var closeBraceIndex = otherItems.LastIndexOf(Constants.CloseBracesSeparator);
         otherItems = closeBraceIndex > 0 ? otherItems[..closeBraceIndex] : otherItems;
