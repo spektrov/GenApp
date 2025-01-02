@@ -12,5 +12,7 @@ public class DalBootstrapModel : BaseTemplateModel, ICsharpClassModel
 
     public string DbmsUsage { get; set; }
 
+    public bool IsMySql { get; set; }
+
     public IEnumerable<InjectionDto> Injections { get; set; }
 }

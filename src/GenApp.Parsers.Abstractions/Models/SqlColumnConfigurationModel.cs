@@ -13,5 +13,7 @@ public class SqlColumnConfigurationModel
 
     public bool IsForeignKey { get; set; }
 
+    public bool KeepCase { get; set; }
+
     public SqlRelationConfiguration? Relation { get; set; }
 }

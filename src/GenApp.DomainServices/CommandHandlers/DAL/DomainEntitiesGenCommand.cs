@@ -8,9 +8,13 @@ using GenApp.Templates.Resources.DTOs;
 using GenApp.Templates.Resources.Models;
 
 namespace GenApp.DomainServices.CommandHandlers.DAL;
-internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper mapper, ICaseTransformer caseTransformer) : IGenCommand
+internal class DomainEntitiesGenCommand(
+    IFileGenService fileGenService,
+    IMapper mapper,
+    ICaseTransformer caseTransformer) : IGenCommand
 {
-    public async Task ExecuteAsync(ZipArchive archive, ApplicationDataModel model, CancellationToken token)
+    public async Task ExecuteAsync(
+        ZipArchive archive, ApplicationDataModel model, CancellationToken token)
     {
         foreach (var entity in model.Entities)
         {
@@ -21,7 +25,9 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
                 .ThenBy(x => x.IsNavigation);
             var propertyDtos = mapper.Map<IEnumerable<DotnetPropertyDto>>(properties)
                 .Select(AdjustProperty).ToList();
-            var usingList = entity.HasId ? new[] { $"{model.AppName}.DAL.Interfaces" } : Array.Empty<string>();
+            var usingList = entity.HasId
+                ? new[] { $"{model.AppName}.DAL.Interfaces" }
+                : Array.Empty<string>();
 
             await fileGenService.CreateEntryAsync(
                 archive,
@@ -30,7 +36,7 @@ internal class DomainEntitiesGenCommand(IFileGenService fileGenService, IMapper 
                 {
                     Namespace = $"{model.AppName}.DAL.Entities",
                     EntityName = $"{entity.EntityName}Entity",
-                    KeyType = entity.IdType,
+                    KeyType = entity.IdType!,
                     HasId = entity.HasId,
                     Properties = propertyDtos,
                     Usings = usingList,

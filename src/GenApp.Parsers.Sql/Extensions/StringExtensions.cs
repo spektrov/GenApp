@@ -8,10 +8,18 @@ public static class StringExtensions
             : Enumerable.Empty<string>();
     }
 
-    public static string GetNameWithoutQuotes(this string str)
+    public static string GetNameWithoutQuotes(this string str, bool keepCase = true)
     {
-        return str.StartsWith(Constants.QuoteSeparator) && str.EndsWith(Constants.QuoteSeparator)
-            ? str[1..^1]
-            : str.ToLower();
+        if (ValueInQuotes(str))
+        {
+            return str[1..^1];
+        }
+
+        return keepCase ? str : str.ToLower();
+    }
+
+    public static bool ValueInQuotes(this string str)
+    {
+        return str.StartsWith(Constants.QuoteSeparator) && str.EndsWith(Constants.QuoteSeparator);
     }
 }

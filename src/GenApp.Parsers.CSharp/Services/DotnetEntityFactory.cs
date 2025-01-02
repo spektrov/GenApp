@@ -42,7 +42,7 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
             NotNull = column.NotNull || (hasId && column.IsPrimaryKey),
             IsId = hasId && column.IsPrimaryKey,
             IsForeignRelation = column.IsForeignKey,
-            ColumnName = column.ColumnName,
+            ColumnName = column.KeepCase ? column.ColumnName : column.ColumnName.ToLower(),
         };
 
         properties.Add(property);
@@ -148,14 +148,14 @@ internal class DotnetEntityFactory(ICaseTransformer caseTransformer, IDotnetRela
     {
         var tableInfo = new SqlTableInfoModel
         {
-            Name = table.TableName,
+            Name = table.KeepCase ? table.TableName : table.TableName.ToLower(),
         };
 
         var primaryKeyCount = table.Columns.Count(x => x.IsPrimaryKey);
         if (primaryKeyCount == 1)
         {
             var primaryKey = table.Columns.First(x => x.IsPrimaryKey);
-            tableInfo.KeyName = primaryKey.ColumnName;
+            tableInfo.KeyName = primaryKey.KeepCase ? primaryKey.ColumnName : primaryKey.ColumnName.ToLower();
         }
 
         return tableInfo;
