@@ -8,7 +8,7 @@ public static class DotnetPostgreSqlTypes
         { DotnetTypes.Bool, new[] { PostgreSqlTypes.Bool } },
         { DotnetTypes.String, new[] { PostgreSqlTypes.Char, PostgreSqlTypes.Varchar, PostgreSqlTypes.Text } },
         { DotnetTypes.Short, new[] { PostgreSqlTypes.Smallint } },
-        { DotnetTypes.Int, new[] { PostgreSqlTypes.Int, PostgreSqlTypes.Serial } },
+        { DotnetTypes.Int, new[] { PostgreSqlTypes.Int, PostgreSqlTypes.Serial, PostgreSqlTypes.Integer } },
         { DotnetTypes.Long, new[] { PostgreSqlTypes.Bigint } },
         { DotnetTypes.Float, new[] { PostgreSqlTypes.Real } },
         { DotnetTypes.Decimal, new[] { PostgreSqlTypes.Decimal, PostgreSqlTypes.Numeric } },
